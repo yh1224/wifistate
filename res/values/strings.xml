@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Wifi State</string>
+    <string name="enabling">Enabling Wi-Fi...</string>
+    <string name="enabled">Wi-Fi enabled.</string>
+    <string name="scanning">Scanning...</string>
+    <string name="authenticating">Authenticating...</string>
+    <string name="associating">Associating...</string>
+    <string name="reassociating">Reassociating...</string>
+    <string name="associated">Associated.</string>
+    <string name="handshaking">Handshaking...</string>
+    <string name="obtaining_ipaddr">Obtaining IP address...</string>
+    <string name="connected">Connected.</string>
+    <string name="disconnected">Disconnected.</string>
+</resources>

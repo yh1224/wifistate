@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="enabling">Wi-Fi有効化中...</string>
+    <string name="enabled">Wi-Fi有効</string>
+    <string name="scanning">スキャン中です...</string>
+    <string name="authenticating">認証中です...</string>
+    <string name="associating">アソシエーション中です...</string>
+    <string name="reassociating">再アソシエーション中です...</string>
+    <string name="associated">アソシエーション完了しました。</string>
+    <string name="handshaking">鍵交換中です...</string>
+    <string name="obtaining_ipaddr">IPアドレスを取得中です...</string>
+    <string name="connected">接続しました。</string>
+    <string name="disconnected">切断しました。</string>
+</resources>
