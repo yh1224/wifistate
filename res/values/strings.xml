@@ -9,6 +9,7 @@
     <string name="reassociating">Reassociating...</string>
     <string name="associated">Associated.</string>
     <string name="handshaking">Handshaking...</string>
+    <string name="handshake_completed">Handshake completed.</string>
     <string name="obtaining_ipaddr">Obtaining IP address...</string>
     <string name="connected">Connected.</string>
     <string name="disconnected">Disconnected.</string>

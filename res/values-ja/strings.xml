@@ -8,6 +8,7 @@
     <string name="reassociating">再アソシエーション中です...</string>
     <string name="associated">アソシエーション完了しました。</string>
     <string name="handshaking">鍵交換中です...</string>
+    <string name="handshake_completed">暗号化が確立しました。</string>
     <string name="obtaining_ipaddr">IPアドレスを取得中です...</string>
     <string name="connected">接続しました。</string>
     <string name="disconnected">切断しました。</string>

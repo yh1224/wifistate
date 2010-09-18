@@ -33,13 +33,13 @@ public class WifiStateReceiver extends BroadcastReceiver {
     private static NetworkInfo networkInfo = null;
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(Context ctx, Intent intent) {
         if (WifiState.DEBUG) logIntent(intent);
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        ConnectivityManager conManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        WifiManager wifiManager = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
+        ConnectivityManager conManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
-        Resources res = context.getResources();
+        Resources res = ctx.getResources();
         int newState = -1;
 
         // 初回は現在の状態を取得する
@@ -72,34 +72,34 @@ public class WifiStateReceiver extends BroadcastReceiver {
             supplicantState = null;
             newState = 0;
         } else if (wifiState == WifiManager.WIFI_STATE_ENABLING) {
-            newState = 1;
+            newState = 2;
             message = res.getString(R.string.enabling);
         } else if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
             if (notifyState < 2) {
-                newState = 2;
+                newState = 3;
                 message = res.getString(R.string.enabled);
             }
         }
 
         if (networkInfo != null && networkInfo.isAvailable() &&
-                networkInfo.getState() == NetworkInfo.State.CONNECTED) {
-            if (networkInfo.getDetailedState() == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
-                newState = 6;
-                message = res.getString(R.string.obtaining_ipaddr);
-            } else {
-                newState = 7;
-                message = res.getString(R.string.connected) +
-                    " SSID:" + wifiInfo.getSSID();
-            }
+                networkInfo.getState() == NetworkInfo.State.CONNECTING &&
+                networkInfo.getDetailedState() == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
+            newState = 7;
+            message = res.getString(R.string.obtaining_ipaddr);
+        } else if (networkInfo != null && networkInfo.isAvailable() &&
+                networkInfo.getState() == NetworkInfo.State.CONNECTED &&
+                networkInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
+            newState = 8;
+            message = res.getString(R.string.connected);
         } else if (supplicantState != null) {
             if (supplicantState == SupplicantState.SCANNING) {
-                newState = 3;
+                newState = 4;
                 message = res.getString(R.string.scanning);
             } else if (supplicantState == SupplicantState.ASSOCIATING) {
-                newState = 4;
+                newState = 5;
                 message = res.getString(R.string.associating);;
             } else if (supplicantState == SupplicantState.ASSOCIATED) {
-                newState = 4;
+                newState = 5;
                 message = res.getString(R.string.associated);
             } else if (supplicantState == SupplicantState.FOUR_WAY_HANDSHAKE ||
                        supplicantState == SupplicantState.GROUP_HANDSHAKE) {
@@ -107,13 +107,13 @@ public class WifiStateReceiver extends BroadcastReceiver {
                 message = res.getString(R.string.handshaking);
             } else if (supplicantState == SupplicantState.COMPLETED) {
                 newState = 6;
-                message = res.getString(R.string.connected);
+                message = res.getString(R.string.handshake_completed);
             } else if (supplicantState == SupplicantState.DISCONNECTED) {
-                newState = 3;
+                newState = 4;
                 message = res.getString(R.string.disconnected);
             }
         } else if (supplicantConnected) {
-            newState = 3;
+            newState = 5;
             message = notifyMessage;
         }
  
@@ -122,34 +122,42 @@ public class WifiStateReceiver extends BroadcastReceiver {
             return;
         }
 
+        if (newState > 4/*スキャン完了済、かつ*/ &&
+                wifiInfo != null && wifiInfo.getSSID() != null/*SSID情報あり、かつ*/ &&
+                message != notifyMessage/*前回とメッセージが変わった場合*/) {
+            message += " (SSID:" + wifiInfo.getSSID() + ")";
+        }
+
         // notify
         if (newState == 0) {
-            clearNotificationIcon(context);
+            clearNotificationIcon(ctx);
         } else if (newState != notifyState || notifyMessage == null || !message.equals(notifyMessage)) {
             Log.d(TAG, "=>[" + newState + "] " + message);
-            showNotificationIcon(context, newState, message);
+            showNotificationIcon(ctx, newState, message);
         }
         notifyState = newState;
         notifyMessage = message;
     }
 
     private static int getIcon(int state) {
-        if (state == 1) {
-            return R.drawable.icon1;
+        if (state == 0) {
+            return R.drawable.icon;
+        } else if (state == 1) {
+            return R.drawable.state1;
         } else if (state == 2) {
-            return R.drawable.icon2;
+            return R.drawable.state2;
         } else if (state == 3) {
-            return R.drawable.icon3;
+            return R.drawable.state3;
         } else if (state == 4) {
-            return R.drawable.icon4;
+            return R.drawable.state4;
         } else if (state == 5) {
-            return R.drawable.icon5;
+            return R.drawable.state5;
         } else if (state == 6) {
-            return R.drawable.icon6;
+            return R.drawable.state6;
         } else if (state == 7) {
-            return R.drawable.icon7;
+            return R.drawable.state7;
         } else if (state == 8) {
-            return R.drawable.icon8;
+            return R.drawable.state8;
         }
         return 0;
     }
@@ -167,8 +175,8 @@ public class WifiStateReceiver extends BroadcastReceiver {
             intent.setClassName("com.android.settings", "com.android.settings.wifi.WifiSettings");
             PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, intent, 0);
             notification.setLatestEventInfo(ctx, ctx.getResources().getString(R.string.app_name),
-                    "Icon" + i, contentIntent);
-            notification.flags |= Notification.FLAG_ONGOING_EVENT;
+                    "State" + i, contentIntent);
+            //notification.flags |= Notification.FLAG_ONGOING_EVENT;
             notificationManager.notify(i, notification);
         }
     }
@@ -186,7 +194,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
         PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, intent, 0);
         notification.setLatestEventInfo(ctx, ctx.getResources().getString(R.string.app_name),
                 notify_text, contentIntent);
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        //notification.flags |= Notification.FLAG_ONGOING_EVENT;
         notificationManager.notify(NOTIFICATIONID_ICON, notification);
     }
 
