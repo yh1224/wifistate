@@ -1,4 +1,4 @@
-package net.assemble.wifistate;
+package net.orleaf.android.wifistate;
 
 import java.util.Set;
 
@@ -132,7 +132,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
         if (newState == 0) {
             clearNotificationIcon(ctx);
         } else if (newState != notifyState || notifyMessage == null || !message.equals(notifyMessage)) {
-            Log.d(TAG, "=>[" + newState + "] " + message);
+            if (WifiState.DEBUG) Log.d(TAG, "=>[" + newState + "] " + message);
             showNotificationIcon(ctx, newState, message);
         }
         notifyState = newState;

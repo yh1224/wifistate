@@ -1,9 +1,9 @@
-package net.assemble.wifistate;
+package net.orleaf.android.wifistate;
 
 import android.app.Activity;
 import android.os.Bundle;
 
-public class WifiStateActivity extends Activity
+public class WifiStateTestActivity extends Activity
 {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
