@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Wifi State</string>
+    <string name="ok">OK</string>
+    <string name="preferences">Preferences</string>
+    <string name="about">About</string>
+    <string name="feedback">Feedback</string>
+    <string name="feedback_to">yh1224%2Borange@gmail.com</string>
+    <string name="pref_enable_title">Enable</string>
+    <string name="pref_enable_summary">Show Wi-Fi connection state notification.</string>
+    <string name="pref_clearable_title">Clearable</string>
+    <string name="pref_clearable_summary">Enable to clear notification.</string>
+    <string name="pref_clear_on_connected_title">Clear on connect</string>
+    <string name="pref_clear_on_connected_summary">Clear notification when Wi-Fi connected.</string>
+    <string name="pref_clear_on_disabled_title">Clear on disable</string>
+    <string name="pref_clear_on_disabled_summary">Clear notification when network disabled.</string>
+    <string name="pref_show_data_network_title">Mobile network</string>
+    <string name="pref_show_data_network_summary">Show mobile network status when Wi-Fi disabled.</string>
     <string name="enabling">Enabling Wi-Fi...</string>
     <string name="enabled">Wi-Fi enabled.</string>
     <string name="scanning">Scanning...</string>
@@ -13,4 +28,7 @@
     <string name="obtaining_ipaddr">Obtaining IP address...</string>
     <string name="connected">Connected.</string>
     <string name="disconnected">Disconnected.</string>
+    <string name="unavailable">Network unavaiable.</string>
+    <string name="mobile_connecting">Connecting to mobile network...</string>
+    <string name="mobile_connected">Connected to mobile network...</string>
 </resources>

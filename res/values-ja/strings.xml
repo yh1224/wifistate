@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="about">バージョン情報</string>
+    <string name="feedback">報告</string>
+    <string name="preferences">設定</string>
+    <string name="pref_enable_title">有効化</string>
+    <string name="pref_enable_summary">接続処理状態を通知バーに表示します。</string>
+    <string name="pref_clearable_title">消去可能</string>
+    <string name="pref_clearable_summary">通知を消去可能にします。</string>
+    <string name="pref_clear_on_connected_title">接続完了時に消去</string>
+    <string name="pref_clear_on_connected_summary">接続が完了した場合に、通知バーから消去します。</string>
+    <string name="pref_clear_on_disabled_title">NW無効時に消去</string>
+    <string name="pref_clear_on_disabled_summary">ネットワーク無効時に、通知バーから消去します。</string>
+    <string name="pref_show_data_network_title">モバイルネットワーク</string>
+    <string name="pref_show_data_network_summary">Wi-Fi無効時に、モバイルネットワークの接続状態を表示します。</string>
     <string name="enabling">Wi-Fi有効化中...</string>
     <string name="enabled">Wi-Fi有効</string>
     <string name="scanning">スキャン中です...</string>
@@ -12,4 +25,7 @@
     <string name="obtaining_ipaddr">IPアドレスを取得中です...</string>
     <string name="connected">接続しました。</string>
     <string name="disconnected">切断しました。</string>
+    <string name="unavailable">未接続</string>
+    <string name="mobile_connecting">モバイルネットワークに接続中です...</string>
+    <string name="mobile_connected">モバイルネットワークに接続しました。</string>
 </resources>

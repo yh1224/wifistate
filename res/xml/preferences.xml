@@ -1,0 +1,27 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/preferences">
+        <CheckBoxPreference android:key="enabled"
+            android:title="@string/pref_enable_title" android:summary="@string/pref_enable_summary"
+            android:defaultValue="true" />
+        <CheckBoxPreference android:key="clearable"
+            android:title="@string/pref_clearable_title"
+            android:summary="@string/pref_clearable_summary"
+            android:defaultValue="false" android:dependency="enabled" />
+        <CheckBoxPreference android:key="clear_on_connected"
+            android:title="@string/pref_clear_on_connected_title"
+            android:summary="@string/pref_clear_on_connected_summary"
+            android:defaultValue="false" android:dependency="enabled" />
+        <CheckBoxPreference android:key="clear_on_disabled"
+            android:title="@string/pref_clear_on_disabled_title"
+            android:summary="@string/pref_clear_on_disabled_summary"
+            android:defaultValue="false" android:dependency="enabled" />
+        <CheckBoxPreference android:key="show_data_network"
+            android:title="@string/pref_show_data_network_title"
+            android:summary="@string/pref_show_data_network_summary"
+            android:defaultValue="true" android:dependency="enabled" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/about">
+        <Preference android:title="@string/about"
+            android:key="about" />
+    </PreferenceCategory>
+</PreferenceScreen>
