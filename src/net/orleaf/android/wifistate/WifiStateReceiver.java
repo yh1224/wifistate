@@ -2,6 +2,7 @@ package net.orleaf.android.wifistate;
 
 import java.util.Set;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -15,6 +16,7 @@ import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -22,6 +24,7 @@ import android.util.Log;
 public class WifiStateReceiver extends BroadcastReceiver {
     private static final String TAG = "WifiState";
     private static final int NOTIFICATIONID_ICON = 1;
+    private static final String ACTION_CLEAR_NOTIFICATION = "net.orleaf.android.wifistate.CLEAR_NOTIFICATION";
 
     enum States {
         STATE_DISABLED,
@@ -99,7 +102,12 @@ public class WifiStateReceiver extends BroadcastReceiver {
         }
 
         if (intent.getAction() != null) {
-            if (intent.getAction().equals("android.net.wifi.WIFI_STATE_CHANGED")) {
+            if (intent.getAction().equals(ACTION_CLEAR_NOTIFICATION)) {
+                // 状態が変わっているかもしれないので再度チェックして消去可能なら消去
+                if (isClearableState(ctx, notifyState)) {
+                    clearNotificationIcon(ctx);
+                }
+            } else if (intent.getAction().equals("android.net.wifi.WIFI_STATE_CHANGED")) {
                 wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
             } else if (intent.getAction().equals("android.net.wifi.STATE_CHANGE")) {
                 wifiNetworkInfo = (NetworkInfo) intent.getExtras().get(WifiManager.EXTRA_NETWORK_INFO);
@@ -227,20 +235,37 @@ public class WifiStateReceiver extends BroadcastReceiver {
             message += " (" + dataNetworkInfo.getExtraInfo() + ")";
         }
 
-        // notify
-        if (WifiStatePreferences.getClearOnDisabled(ctx) && newState == States.STATE_DISABLED) {
-            // 無効時に消去
-            clearNotificationIcon(ctx);
-        } else if (WifiStatePreferences.getClearOnConnected(ctx) &&
-                (newState == States.STATE_WIFI_CONNECTED || newState == States.STATE_MOBILE_CONNECTED)) {
-            // 接続完了時に消去
-            clearNotificationIcon(ctx);
-        } else if (newState != notifyState || notifyMessage == null || !message.equals(notifyMessage)) {
+        if (newState != notifyState || notifyMessage == null || !message.equals(notifyMessage)) {
             if (WifiState.DEBUG) Log.d(TAG, "=>[" + newState + "] " + message);
             showNotificationIcon(ctx, newState, message);
+            if (isClearableState(ctx, newState)) {
+                // 3秒後に消去
+                long next = SystemClock.elapsedRealtime() + 3000;
+                Intent clearIntent = new Intent(mCtx, WifiStateReceiver.class).setAction(ACTION_CLEAR_NOTIFICATION);
+                AlarmManager alarmManager = (AlarmManager) mCtx.getSystemService(Context.ALARM_SERVICE);
+                alarmManager.set(AlarmManager.ELAPSED_REALTIME, next, PendingIntent.getBroadcast(ctx, 0, clearIntent, 0));
+            }
         }
         notifyState = newState;
         notifyMessage = message;
+    }
+
+    /**
+     * 消去可能な状態かどうか
+     *
+     * @param ctx コンテキスト
+     * @param states 状態
+     * @return true:消去可能
+     */
+    private boolean isClearableState(Context ctx, States state) {
+        if (WifiStatePreferences.getClearOnDisabled(ctx) && state == States.STATE_DISABLED) {
+            return true;
+        }
+        if (WifiStatePreferences.getClearOnConnected(ctx) &&
+                    (state == States.STATE_WIFI_CONNECTED || state == States.STATE_MOBILE_CONNECTED)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -251,7 +276,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
      */
     private static int getIcon(States state) {
         if (state == States.STATE_DISABLED) {
-            return R.drawable.icon;
+            return R.drawable.state_0;
         } else if (state == States.STATE_WIFI_1) {
             return R.drawable.state_w1;
         } else if (state == States.STATE_WIFI_ENABLING) {

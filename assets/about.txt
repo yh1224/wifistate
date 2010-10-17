@@ -1,6 +1,8 @@
 Indicate Wi-Fi connection state on notification bar.
 
 [History]
+v0.3
+- Delay clearing notification.
 v0.2
 - Added preferences.
 - Indicate mobile network state.
