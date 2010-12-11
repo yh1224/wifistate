@@ -106,6 +106,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
                 // 状態が変わっているかもしれないので再度チェックして消去可能なら消去
                 if (isClearableState(ctx, notifyState)) {
                     clearNotificationIcon(ctx);
+                    return;
                 }
             } else if (intent.getAction().equals("android.net.wifi.WIFI_STATE_CHANGED")) {
                 wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
@@ -132,10 +133,12 @@ public class WifiStateReceiver extends BroadcastReceiver {
         @Override
         public void onDataConnectionStateChanged(int state) {
             super.onDataConnectionStateChanged(state);
-            if (WifiState.DEBUG) Log.d(TAG, "DataConnectionState changed: " + state);
-            dataConnectionState = state;
-            dataNetworkInfo = mConManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-            updateState(mCtx);
+            if (WifiState.DEBUG) Log.d(TAG, "DataConnectionState: " + dataConnectionState + " -> " + state);
+            if (state != dataConnectionState) {
+                dataConnectionState = state;
+                dataNetworkInfo = mConManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+                updateState(mCtx);
+            }
         }
     };
 
