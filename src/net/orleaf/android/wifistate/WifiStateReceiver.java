@@ -22,7 +22,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class WifiStateReceiver extends BroadcastReceiver {
-    private static final String TAG = "WifiState";
     private static final int NOTIFICATIONID_ICON = 1;
     private static final String ACTION_CLEAR_NOTIFICATION = "net.orleaf.android.wifistate.CLEAR_NOTIFICATION";
 
@@ -85,7 +84,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
             }
 
             // 現在の状態を取得
-            if (WifiState.DEBUG) Log.d(TAG, "Gathering connection state.");
+            if (WifiState.DEBUG) Log.d(WifiState.TAG, "Gathering connection state.");
             wifiState = mWifiManager.getWifiState();
             WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
             supplicantState = wifiInfo.getSupplicantState();
@@ -133,7 +132,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
         @Override
         public void onDataConnectionStateChanged(int state) {
             super.onDataConnectionStateChanged(state);
-            if (WifiState.DEBUG) Log.d(TAG, "DataConnectionState: " + dataConnectionState + " -> " + state);
+            if (WifiState.DEBUG) Log.d(WifiState.TAG, "DataConnectionState: " + dataConnectionState + " -> " + state);
             if (state != dataConnectionState) {
                 dataConnectionState = state;
                 dataNetworkInfo = mConManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
@@ -222,7 +221,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
 
         if (newState == null) {
             // no change
-            if (WifiState.DEBUG) Log.d(TAG, "State not recognized.");
+            if (WifiState.DEBUG) Log.d(WifiState.TAG, "State not recognized.");
             return;
         }
 
@@ -239,7 +238,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
         }
 
         if (newState != notifyState || notifyMessage == null || !message.equals(notifyMessage)) {
-            if (WifiState.DEBUG) Log.d(TAG, "=>[" + newState + "] " + message);
+            if (WifiState.DEBUG) Log.d(WifiState.TAG, "=>[" + newState + "] " + message);
             showNotificationIcon(ctx, newState, message);
             if (isClearableState(ctx, newState)) {
                 // 3秒後に消去
@@ -379,7 +378,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
     }
 
     private static void logIntent(Intent intent) {
-        Log.d(TAG, "received intent: " + intent.getAction());
+        Log.d(WifiState.TAG, "received intent: " + intent.getAction());
 
         Bundle extras = intent.getExtras();
         if (extras != null) {
@@ -387,22 +386,8 @@ public class WifiStateReceiver extends BroadcastReceiver {
             if (keySet != null) {
                 Object[] keys = keySet.toArray();
                 for (int i = 0; i < keys.length; i++) {
-                    String val;
                     Object o = extras.get((String)keys[i]);
-                    if (o instanceof Integer) {
-                        val = "Integer:" + ((Integer)o).toString();
-                    } else if (o instanceof Boolean) {
-                        val = "Boolean:" + ((Boolean)o).toString();
-                    } else if (o instanceof SupplicantState) {
-                        val = "SupplicantState:" + ((SupplicantState)o).toString();
-                    } else if (o instanceof NetworkInfo) {
-                        val = "NetworkInfo:" + ((NetworkInfo)o).toString();
-                    } else if (o instanceof String) {
-                        val = "String:" + (String)o;
-                    } else {
-                        val = o.getClass().getName() + ":?";
-                    }
-                    Log.d(TAG, "  " + (String)keys[i] + " = " + val);
+                    Log.d(WifiState.TAG, "  " + (String)keys[i] + " = (" + o.getClass().getName() + ") " + o.toString());
                 }
             }
         }
