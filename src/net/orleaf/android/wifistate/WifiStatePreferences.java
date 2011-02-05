@@ -12,13 +12,13 @@ public class WifiStatePreferences
     public static final boolean PREF_ENABLED_DEFAULT = true;
 
     public static final String PREF_CLEARABLE_KEY = "clearable";
-    public static final boolean PREF_CLEARABLE_DEFAULT = true;
+    public static final boolean PREF_CLEARABLE_DEFAULT = false;
 
     public static final String PREF_CLEAR_ON_CONNECTED_KEY = "clear_on_connected";
-    public static final boolean PREF_CLEAR_ON_CONNECTED_DEFAULT = true;
+    public static final boolean PREF_CLEAR_ON_CONNECTED_DEFAULT = false;
 
     public static final String PREF_CLEAR_ON_DISABLED_KEY = "clear_on_disabled";
-    public static final boolean PREF_CLEAR_ON_DISABLED_DEFAULT = true;
+    public static final boolean PREF_CLEAR_ON_DISABLED_DEFAULT = false;
 
     public static final String PREF_SHOW_DATA_NETWORK_KEY = "show_data_network";
     public static final boolean PREF_SHOW_DATA_NETWORK_DEFAULT = true;
