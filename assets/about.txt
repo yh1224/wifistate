@@ -11,4 +11,4 @@ v0.2
 v0.1
 - First release
 
-Copyright 2010 Orange leaf
+Copyright 2010-2011 Orange leaf
