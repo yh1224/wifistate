@@ -107,13 +107,16 @@ public class WifiStateReceiver extends BroadcastReceiver {
                     clearNotificationIcon(ctx);
                     return;
                 }
-            } else if (intent.getAction().equals("android.net.wifi.WIFI_STATE_CHANGED")) {
+            } else if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                wifiNetworkInfo = mConManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                dataNetworkInfo = mConManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            } else if (intent.getAction().equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {
                 wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
-            } else if (intent.getAction().equals("android.net.wifi.STATE_CHANGE")) {
+            } else if (intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
                 wifiNetworkInfo = (NetworkInfo) intent.getExtras().get(WifiManager.EXTRA_NETWORK_INFO);
-            } else if (intent.getAction().equals("android.net.wifi.supplicant.CONNECTION_CHANGE")) {
+            } else if (intent.getAction().equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) {
                 supplicantConnected = intent.getBooleanExtra(WifiManager.EXTRA_SUPPLICANT_CONNECTED, false);
-            } else if (intent.getAction().equals("android.net.wifi.supplicant.STATE_CHANGE")) {
+            } else if (intent.getAction().equals(WifiManager.SUPPLICANT_STATE_CHANGED_ACTION)) {
                 supplicantState = (SupplicantState) intent.getExtras().get(WifiManager.EXTRA_NEW_STATE);
             }
         }
