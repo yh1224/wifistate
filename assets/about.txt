@@ -1,7 +1,7 @@
-Indicate Wi-Fi connection state on notification bar.
+Copyright 2010-2011 Orange leaf
 
 [History]
-v0.3.1
+v0.3.x
 - Bug fix
 v0.3
 - Delay clearing notification.
@@ -10,5 +10,3 @@ v0.2
 - Indicate mobile network state.
 v0.1
 - First release
-
-Copyright 2010-2011 Orange leaf
