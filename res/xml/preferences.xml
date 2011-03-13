@@ -20,8 +20,4 @@
             android:summary="@string/pref_show_data_network_summary"
             android:defaultValue="true" android:dependency="enabled" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/about">
-        <Preference android:title="@string/about"
-            android:key="about" />
-    </PreferenceCategory>
 </PreferenceScreen>

@@ -31,4 +31,9 @@
     <string name="unavailable">Network unavaiable.</string>
     <string name="mobile_connecting">Connecting to mobile network...</string>
     <string name="mobile_connected">Connected to mobile network...</string>
+    <string name="wifi">Wi-Fi</string>
+    <string name="wifi_reenable">Re-connect</string>
+    <string name="wifi_settings">Wi-Fi settings</string>
+    <string name="checking_status">Checking status...</string>
+    <string name="press_menu_to_config">Press MENU to configure application settings.</string>
 </resources>

@@ -28,4 +28,9 @@
     <string name="unavailable">未接続</string>
     <string name="mobile_connecting">モバイルネットワークに接続中です...</string>
     <string name="mobile_connected">モバイルネットワークに接続しました。</string>
+    <string name="wifi">Wi-Fi</string>
+    <string name="wifi_reenable">再接続</string>
+    <string name="wifi_settings">Wi-Fi設定</string>
+    <string name="checking_status">状態を取得中です...</string>
+    <string name="press_menu_to_config">アプリケーションの設定をおこなうにはMENUキーを押してください。</string>
 </resources>
