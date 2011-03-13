@@ -365,7 +365,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
                 notify_text, contentIntent);
         notification.flags = 0;
         if (!WifiStatePreferences.getClearable(ctx)) {
-            notification.flags |= Notification.FLAG_ONGOING_EVENT;
+            notification.flags |= (Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR);
         }
         notificationManager.notify(NOTIFICATIONID_ICON, notification);
     }
