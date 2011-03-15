@@ -154,7 +154,7 @@ public class NetworkStateInfo {
             if (WifiState.DEBUG) Log.d(WifiState.TAG, "State not recognized.");
             return false;
         }
-        if (newState == mState && newStateDetail.equals(mStateDetail)) {
+        if (newState == mState && mStateDetail != null && newStateDetail.equals(mStateDetail)) {
             // 状態変更なし
             return false;
         }
