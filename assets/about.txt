@@ -1,6 +1,8 @@
 Copyright 2010-2011 Orange leaf
 
 [History]
+v0.4
+- Added Wi-Fi control.
 v0.3.x
 - Bug fix
 v0.3
