@@ -1,5 +1,7 @@
 package net.orleaf.android.wifistate;
 
+import java.util.List;
+
 import net.orleaf.android.AboutActivity;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -7,10 +9,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,11 +23,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 public class WifiStateActivity extends Activity {
-    
+
     private WifiManager mWifiManager;
 
     // Managers
@@ -34,8 +40,11 @@ public class WifiStateActivity extends Activity {
     private ToggleButton mWifiToggle;
     private Button mWifiSettings;
     private Button mWifiReenable;
+    private LinearLayout mNetworkLayout;
     private TextView mNetworkNameText;
     private TextView mNetworkStateText;
+
+    private List<WifiConfiguration> mNetworkList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,11 +52,14 @@ public class WifiStateActivity extends Activity {
         requestWindowFeature(Window.FEATURE_LEFT_ICON);
 
         mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        mNetworkList = mWifiManager.getConfiguredNetworks();
 
         setContentView(R.layout.main);
         getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
                 R.drawable.icon);
 
+        mNetworkLayout = (LinearLayout) findViewById(R.id.network);
+        registerForContextMenu(mNetworkLayout);
         mNetworkNameText = (TextView) findViewById(R.id.network_name);
         mNetworkStateText = (TextView) findViewById(R.id.network_status);
 
@@ -94,7 +106,7 @@ public class WifiStateActivity extends Activity {
                                 mReenableReceiver = null;
                             }
                         }
-                    }; 
+                    };
                     registerReceiver(mReenableReceiver,
                         new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
                 }
@@ -161,6 +173,32 @@ public class WifiStateActivity extends Activity {
     };
 
     @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle(R.string.connect_to);
+        // SSID一覧
+        for (int i = 0; i < mNetworkList.size(); i++) {
+            WifiConfiguration config = mNetworkList.get(i);
+            String ssid = config.SSID;
+            if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
+                ssid = ssid.substring(1, ssid.length() - 1);
+            }
+            menu.add(0, i, 0, ssid);
+        }
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
+            enableWifi(true);
+        }
+        // 選択されたAPに接続
+        WifiConfiguration config = mNetworkList.get(item.getItemId());
+        mWifiManager.enableNetwork(config.networkId, true);
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mReenableReceiver != null) {
@@ -170,7 +208,7 @@ public class WifiStateActivity extends Activity {
     }
 
     /**
-     * 
+     *
      * @param enable true:有効化/無効化
      */
     private void enableWifi(final boolean enable) {

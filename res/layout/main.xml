@@ -3,10 +3,10 @@
     android:orientation="vertical" android:layout_width="fill_parent"
     android:layout_height="fill_parent">
     <FrameLayout android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:layout_margin="4dp">
-        <LinearLayout android:orientation="vertical"
-            android:layout_width="fill_parent" android:layout_height="wrap_content"
-            android:paddingLeft="4dp">
+        android:layout_height="wrap_content" android:layout_margin="6dp">
+        <LinearLayout android:id="@+id/network"
+            android:orientation="vertical" android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:paddingLeft="2dp">
             <TextView android:id="@+id/network_name"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" android:textSize="20sp"
@@ -27,7 +27,7 @@
     </FrameLayout>
     <LinearLayout android:orientation="horizontal"
         android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:padding="4dp">
+        android:layout_margin="4dp">
         <Button android:id="@+id/wifi_settings" android:text="@string/wifi_settings"
             android:layout_width="fill_parent" android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -37,5 +37,5 @@
     </LinearLayout>
     <TextView android:text="@string/press_menu_to_config"
         android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:textSize="12sp" android:padding="8dp" />
+        android:textSize="12sp" android:layout_margin="6dp" />
 </LinearLayout>
