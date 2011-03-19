@@ -1,6 +1,8 @@
 Copyright 2010-2011 Orange leaf
 
 [History]
+v0.5
+- Added AP select to connect. (Long tap status)
 v0.4
 - Added Wi-Fi control.
 v0.3.x
