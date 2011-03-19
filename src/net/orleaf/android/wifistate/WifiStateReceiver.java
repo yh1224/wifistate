@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.telephony.PhoneStateListener;
@@ -48,6 +49,12 @@ public class WifiStateReceiver extends BroadcastReceiver {
         }
 
         if (intent.getAction() != null) {
+            if (intent.getAction().equals("android.intent.action.PACKAGE_REPLACED"/*Intent.ACTION_PACKAGE_REPLACED*/)) {
+                if (intent.getData() == null ||
+                    !intent.getData().equals(Uri.fromParts("package", mCtx.getPackageName(), null))) {
+                    return;
+                }
+            } else
             if (intent.getAction().equals(ACTION_CLEAR_NOTIFICATION)) {
                 // 状態が変わっているかもしれないので再度チェックして消去可能なら消去
                 if (mNetworkStateInfo.isClearableState()) {

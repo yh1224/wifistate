@@ -26,6 +26,10 @@
                 <action android:name="android.net.wifi.supplicant.CONNECTION_CHANGE" />
                 <action android:name="android.net.wifi.supplicant.STATE_CHANGE" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" />
+            </intent-filter>
         </receiver>
     </application>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
