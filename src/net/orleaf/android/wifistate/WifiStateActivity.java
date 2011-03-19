@@ -219,6 +219,9 @@ public class WifiStateActivity extends Activity {
         new AsyncTask<Object, Object, Boolean>() {
             @Override
             protected Boolean doInBackground(Object... params) {
+                try {   // UIを優先し、ちょっと待つ
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {}
                 // これがあるとIS01で固まる
                 //if (!enable) mWifiManager.disconnect();
                 mWifiManager.setWifiEnabled(enable);
