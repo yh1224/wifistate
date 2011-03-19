@@ -29,10 +29,11 @@ import android.widget.ToggleButton;
 
 public class WifiStateActivity extends Activity {
 
+    // Managers
     private WifiManager mWifiManager;
 
-    // Managers
-    private NetworkStateInfo mNetworkStateInfo;
+    private NetworkStateInfo mNetworkStateInfo = null;
+    private List<WifiConfiguration> mNetworkList = null;
 
     private BroadcastReceiver mConnectivityReceiver = null;
     private BroadcastReceiver mReenableReceiver = null;
@@ -44,15 +45,12 @@ public class WifiStateActivity extends Activity {
     private TextView mNetworkNameText;
     private TextView mNetworkStateText;
 
-    private List<WifiConfiguration> mNetworkList;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_LEFT_ICON);
 
         mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        mNetworkList = mWifiManager.getConfiguredNetworks();
 
         setContentView(R.layout.main);
         getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
@@ -112,8 +110,6 @@ public class WifiStateActivity extends Activity {
                 }
             }
         });
-
-        mNetworkStateInfo = new NetworkStateInfo(this);
     }
 
     @Override
@@ -176,6 +172,9 @@ public class WifiStateActivity extends Activity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         menu.setHeaderTitle(R.string.connect_to);
         // SSID一覧
+        if (mNetworkList == null) {
+            mNetworkList = mWifiManager.getConfiguredNetworks();
+        }
         for (int i = 0; i < mNetworkList.size(); i++) {
             WifiConfiguration config = mNetworkList.get(i);
             String ssid = config.SSID;
@@ -237,6 +236,9 @@ public class WifiStateActivity extends Activity {
         new AsyncTask<Object, Object, Boolean>() {
             @Override
             protected Boolean doInBackground(Object... params) {
+                if (mNetworkStateInfo == null) {
+                    mNetworkStateInfo = new NetworkStateInfo(WifiStateActivity.this);
+                }
                 mNetworkStateInfo.update();
                 return true;
             }
