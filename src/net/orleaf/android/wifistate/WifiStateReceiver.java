@@ -146,7 +146,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
                 ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification = new Notification(mNetworkStateInfo.getIcon(),
                 ctx.getResources().getString(R.string.app_name), System.currentTimeMillis());
-        Intent intent = new Intent(ctx, WifiStateActivity.class);
+        Intent intent = new Intent(ctx, WifiStateLaunchActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, intent, 0);
         notification.setLatestEventInfo(ctx, ctx.getResources().getString(R.string.app_name),
                 notify_text, contentIntent);

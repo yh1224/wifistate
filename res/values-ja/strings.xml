@@ -13,6 +13,7 @@
     <string name="pref_clear_on_disabled_summary">ネットワーク無効時に、通知バーから消去します。</string>
     <string name="pref_show_data_network_title">モバイルネットワーク</string>
     <string name="pref_show_data_network_summary">Wi-Fi無効時に、モバイルネットワークの接続状態を表示します。</string>
+    <string name="pref_action_on_tap_title">タップ時の動作</string>
     <string name="enabling">Wi-Fi有効化中...</string>
     <string name="enabled">Wi-Fi有効</string>
     <string name="scanning">スキャン中...</string>
@@ -34,4 +35,7 @@
     <string name="checking_status">状態を取得中です...</string>
     <string name="press_menu_to_config">アプリケーションの設定をおこなうにはMENUキーを押してください。</string>
     <string name="connect_to">接続先</string>
+    <string name="open_dialog">ダイアログを開く</string>
+    <string name="toggle_wifi">Wi-Fi 切り替え</string>
+    <string name="open_wifi_settings">Wi-Fi 設定</string>
 </resources>

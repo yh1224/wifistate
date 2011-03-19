@@ -3,6 +3,7 @@ package net.orleaf.android.wifistate;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 
 /**
@@ -11,10 +12,16 @@ import android.preference.PreferenceActivity;
 public class WifiStatePreferencesActivity extends PreferenceActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener
 {
+    private ListPreference mPrefActionOnTap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+        
+        mPrefActionOnTap = (ListPreference) findPreference(WifiStatePreferences.PREF_ACTION_ON_TAP_KEY);
+
+        updateSummary();
     }
 
     @Override
@@ -32,6 +39,35 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        // summaryを更新
+        updateSummary();
+    }
+
+    /**
+     * 設定値から表示文字列を取得
+     *
+     * @param val 設定値
+     * @param entries　表示文字列の配列
+     * @param entryvalues　設定値の配列
+     * @return
+     */
+    private String getEntryString(String val, String[] entries, String[] entryvalues) {
+        for (int i = 0; i < entries.length; i++) {
+            if (val.equals(entryvalues[i])) {
+                return entries[i];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 表示の更新
+     */
+    private void updateSummary() {
+        mPrefActionOnTap.setSummary(
+                getEntryString(mPrefActionOnTap.getValue(),
+                    getResources().getStringArray(R.array.entries_action_on_tap),
+                    getResources().getStringArray(R.array.entryvalues_action_on_tap)));
     }
 
     private void updateService() {

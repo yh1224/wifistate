@@ -23,6 +23,9 @@ public class WifiStatePreferences
     public static final String PREF_SHOW_DATA_NETWORK_KEY = "show_data_network";
     public static final boolean PREF_SHOW_DATA_NETWORK_DEFAULT = true;
 
+    public static final String PREF_ACTION_ON_TAP_KEY = "action_on_tap";
+    public static final String PREF_ACTION_ON_TAP_DEFAULT = "open_dialog";
+
     public static boolean getEnabled(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(
                 WifiStatePreferences.PREF_ENABLED_KEY,
@@ -51,6 +54,12 @@ public class WifiStatePreferences
         return PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(
                 WifiStatePreferences.PREF_SHOW_DATA_NETWORK_KEY,
                 WifiStatePreferences.PREF_SHOW_DATA_NETWORK_DEFAULT);
+    }
+
+    public static String getActionOnTap(Context ctx) {
+        return PreferenceManager.getDefaultSharedPreferences(ctx).getString(
+                WifiStatePreferences.PREF_ACTION_ON_TAP_KEY,
+                WifiStatePreferences.PREF_ACTION_ON_TAP_DEFAULT);
     }
 
 }

@@ -12,6 +12,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="WifiStateLaunchActivity"
+            android:launchMode="singleInstance" />
         <activity android:name="WifiStatePreferencesActivity" />
         <activity android:name="net.orleaf.android.AboutActivity"
             android:theme="@android:style/Theme.Dialog" />
