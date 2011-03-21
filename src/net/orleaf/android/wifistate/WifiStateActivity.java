@@ -255,7 +255,12 @@ public class WifiStateActivity extends Activity {
      */
     private void updateView() {
         mNetworkNameText.setText(mNetworkStateInfo.getNetworkName());
-        mNetworkStateText.setText(mNetworkStateInfo.getDetail());
+        String detail = mNetworkStateInfo.getDetail();
+        String ip = mNetworkStateInfo.getLocalIpAddress();
+        if (ip != null) {
+            detail += " (" + ip + ")";
+        }
+        mNetworkStateText.setText(detail);
         if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
             if (WifiState.DEBUG) Log.d(WifiState.TAG, "Wi-Fi state changed to DISABLED.");
             mWifiToggle.setChecked(false);

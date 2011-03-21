@@ -3,6 +3,7 @@ package net.orleaf.android.wifistate;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
+import android.net.DhcpInfo;
 import android.net.NetworkInfo;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
@@ -249,6 +250,43 @@ public class NetworkStateInfo {
      */
     public String getDetail() {
         return mStateDetail;
+    }
+
+    /**
+     * IPアドレスを取得
+     */
+    public String getLocalIpAddress() {
+        if (mState.equals(States.STATE_WIFI_CONNECTED)) {
+            DhcpInfo dhcpInfo = mWifiManager.getDhcpInfo();
+            if (dhcpInfo.ipAddress != 0) {
+                return int2IpAddress(dhcpInfo.ipAddress);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * ゲートウェイアドレスを取得
+     */
+    public String getGatewayIpAddress() {
+        if (mState.equals(States.STATE_WIFI_CONNECTED)) {
+            DhcpInfo dhcpInfo = mWifiManager.getDhcpInfo();
+            if (dhcpInfo.gateway != 0) {
+                return int2IpAddress(dhcpInfo.gateway);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * intをIPアドレス文字列に変換
+     */
+    private String int2IpAddress(int ip) {
+        return
+            ( ip        & 0xff) + "." +
+            ((ip >>  8) & 0xff) + "." +
+            ((ip >> 16) & 0xff) + "." +
+            ((ip >> 24) & 0xff);
     }
 
 }
