@@ -12,8 +12,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="WifiStateLaunchActivity"
-            android:launchMode="singleInstance" />
         <activity android:name="WifiStatePreferencesActivity" />
         <activity android:name="net.orleaf.android.AboutActivity"
             android:theme="@android:style/Theme.Dialog" />
@@ -31,6 +29,7 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
+        <receiver android:name="WifiStateLaunchReceiver" />
     </application>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
