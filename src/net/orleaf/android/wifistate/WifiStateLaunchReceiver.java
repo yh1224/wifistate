@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
-import android.util.Log;
 
 public class WifiStateLaunchReceiver extends BroadcastReceiver {
 
@@ -15,17 +14,17 @@ public class WifiStateLaunchReceiver extends BroadcastReceiver {
         String onTap = WifiStatePreferences.getActionOnTap(context);
         if (onTap.equals("toggle_wifi")) {
             if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
-                if (WifiState.DEBUG) Log.d(WifiState.TAG, "Wi-Fi enabled.");
-                mWifiManager.setWifiEnabled(true);
+                WifiStateControlService.startSerivce(context, WifiStateControlService.ACTION_WIFI_ENABLE);
             } else {
-                if (WifiState.DEBUG) Log.d(WifiState.TAG, "Wi-Fi disabled.");
-                mWifiManager.setWifiEnabled(false);
+                WifiStateControlService.startSerivce(context, WifiStateControlService.ACTION_WIFI_DISABLE);
             }
         } else if (onTap.equals("wifi_settings")) {
             Intent launchIntent = new Intent();
             launchIntent.setClassName("com.android.settings", "com.android.settings.wifi.WifiSettings");
             launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(launchIntent);
+        } else if (onTap.equals("reenable_wifi")) {
+            WifiStateControlService.startSerivce(context, WifiStateControlService.ACTION_WIFI_REENABLE);
         } else {
             Intent launchIntent = new Intent(context, WifiStateActivity.class);
             launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

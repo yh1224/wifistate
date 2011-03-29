@@ -3,11 +3,13 @@
     <string-array name="entries_action_on_tap">
         <item>@string/open_dialog</item>
         <item>@string/toggle_wifi</item>
+        <item>@string/reenable_wifi</item>
         <item>@string/open_wifi_settings</item>
     </string-array>
     <string-array name="entryvalues_action_on_tap">
         <item>open_dialog</item>
         <item>toggle_wifi</item>
+        <item>reenable_wifi</item>
         <item>wifi_settings</item>
     </string-array>
 </resources>

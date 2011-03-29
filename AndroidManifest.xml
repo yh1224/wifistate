@@ -30,6 +30,7 @@
             </intent-filter>
         </receiver>
         <receiver android:name="WifiStateLaunchReceiver" />
+        <service android:name="WifiStateControlService" />
     </application>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

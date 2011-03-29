@@ -33,9 +33,12 @@
     <string name="wifi_reenable">再接続</string>
     <string name="wifi_settings">Wi-Fi設定</string>
     <string name="checking_status">状態を取得中です...</string>
+    <string name="enabling_wifi">Wi-Fiを有効化しています...</string>
+    <string name="disabling_wifi">Wi-Fiを無効化しています...</string>
     <string name="press_menu_to_config">アプリケーションの設定をおこなうにはMENUキーを押してください。</string>
     <string name="connect_to">接続先</string>
     <string name="open_dialog">ダイアログを開く</string>
     <string name="toggle_wifi">Wi-Fi 切り替え</string>
+    <string name="reenable_wifi">Wi-Fi 再接続</string>
     <string name="open_wifi_settings">Wi-Fi 設定</string>
 </resources>

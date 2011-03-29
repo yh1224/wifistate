@@ -36,7 +36,6 @@ public class WifiStateActivity extends Activity {
     private List<WifiConfiguration> mNetworkList = null;
 
     private BroadcastReceiver mConnectivityReceiver = null;
-    private BroadcastReceiver mReenableReceiver = null;
 
     private ToggleButton mWifiToggle;
     private Button mWifiSettings;
@@ -77,9 +76,9 @@ public class WifiStateActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (mWifiToggle.isChecked()) {
-                    enableWifi(true);
+                    enableWifi(WifiStateControlService.ACTION_WIFI_ENABLE);
                 } else {
-                    enableWifi(false);
+                    enableWifi(WifiStateControlService.ACTION_WIFI_DISABLE);
                 }
             }
         });
@@ -88,26 +87,7 @@ public class WifiStateActivity extends Activity {
         mWifiReenable.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
-                    if (WifiState.DEBUG) Log.d(WifiState.TAG, "Wi-Fi enabled.");
-                    enableWifi(true);
-                } else {
-                    if (WifiState.DEBUG) Log.d(WifiState.TAG, "Wi-Fi disabled.");
-                    enableWifi(false);
-                    mReenableReceiver = new BroadcastReceiver() {
-                        @Override
-                        public void onReceive(Context context, Intent intent) {
-                            if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
-                                if (WifiState.DEBUG) Log.d(WifiState.TAG, "Wi-Fi re-enabled.");
-                                mWifiManager.setWifiEnabled(true);
-                                unregisterReceiver(mReenableReceiver);
-                                mReenableReceiver = null;
-                            }
-                        }
-                    };
-                    registerReceiver(mReenableReceiver,
-                        new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
-                }
+                enableWifi(WifiStateControlService.ACTION_WIFI_REENABLE);
             }
         });
     }
@@ -189,7 +169,7 @@ public class WifiStateActivity extends Activity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
-            enableWifi(true);
+            enableWifi(WifiStateControlService.ACTION_WIFI_ENABLE);
         }
         // 選択されたAPに接続
         WifiConfiguration config = mNetworkList.get(item.getItemId());
@@ -200,17 +180,13 @@ public class WifiStateActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mReenableReceiver != null) {
-            unregisterReceiver(mReenableReceiver);
-            mReenableReceiver = null;
-        }
     }
 
     /**
      *
      * @param enable true:有効化/無効化
      */
-    private void enableWifi(final boolean enable) {
+    private void enableWifi(final String action) {
         // 状態が変わるまでボタンを無効化
         mWifiToggle.setEnabled(false);
         mWifiReenable.setEnabled(false);
@@ -219,11 +195,11 @@ public class WifiStateActivity extends Activity {
             @Override
             protected Boolean doInBackground(Object... params) {
                 try {   // UIを優先し、ちょっと待つ
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {}
                 // これがあるとIS01で固まる
                 //if (!enable) mWifiManager.disconnect();
-                mWifiManager.setWifiEnabled(enable);
+                WifiStateControlService.startSerivce(WifiStateActivity.this, action);
                 return true;
             }
         }.execute();
