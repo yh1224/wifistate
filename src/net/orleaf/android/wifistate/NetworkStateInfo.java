@@ -93,59 +93,59 @@ public class NetworkStateInfo {
             if (WifiStatePreferences.getShowDataNetwork(mCtx)) {
                 if (mDataConnectionState == TelephonyManager.DATA_CONNECTING) {
                     newState = States.STATE_MOBILE_CONNECTING;
-                    newStateDetail = res.getString(R.string.mobile_connecting);
+                    newStateDetail = res.getString(R.string.state_mobile_connecting);
                 } else if (mDataConnectionState == TelephonyManager.DATA_CONNECTED) {
                     newState = States.STATE_MOBILE_CONNECTED;
-                    newStateDetail = res.getString(R.string.mobile_connected);
+                    newStateDetail = res.getString(R.string.state_mobile_connected);
                 } else {
                     newState = States.STATE_DISABLED;
-                    newStateDetail = res.getString(R.string.unavailable);
+                    newStateDetail = res.getString(R.string.state_unavailable);
                 }
             } else {
                 newState = States.STATE_DISABLED;
-                newStateDetail = res.getString(R.string.unavailable);
+                newStateDetail = res.getString(R.string.state_unavailable);
             }
         } else if (mWifiState == WifiManager.WIFI_STATE_ENABLING) {
             // -> enabled
             newState = States.STATE_WIFI_ENABLING;
-            newStateDetail = res.getString(R.string.enabling);
+            newStateDetail = res.getString(R.string.state_enabling);
         } else if (mWifiState == WifiManager.WIFI_STATE_ENABLED) {
             // enabling -> enabled
             if (mState.compareTo(States.STATE_WIFI_ENABLED) < 0) {
                 newState = States.STATE_WIFI_ENABLED;
-                newStateDetail = res.getString(R.string.enabled);
+                newStateDetail = res.getString(R.string.state_enabled);
             }
 
             if (mWifiNetworkInfo != null && mWifiNetworkInfo.isAvailable() &&
                     mWifiNetworkInfo.getState() == NetworkInfo.State.CONNECTING &&
                     mWifiNetworkInfo.getDetailedState() == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
                 newState = States.STATE_WIFI_OBTAINING_IPADDR;
-                newStateDetail = res.getString(R.string.obtaining_ipaddr);
+                newStateDetail = res.getString(R.string.state_obtaining_ipaddr);
             } else if (mWifiNetworkInfo != null && mWifiNetworkInfo.isAvailable() &&
                     mWifiNetworkInfo.getState() == NetworkInfo.State.CONNECTED &&
                     mWifiNetworkInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
                 newState = States.STATE_WIFI_CONNECTED;
-                newStateDetail = res.getString(R.string.connected);
+                newStateDetail = res.getString(R.string.state_connected);
             } else if (mSupplicantConnected && mSupplicantState != null) {
                 if (mSupplicantState == SupplicantState.SCANNING) {
                     newState = States.STATE_WIFI_SCANNING;
-                    newStateDetail = res.getString(R.string.scanning);
+                    newStateDetail = res.getString(R.string.state_scanning);
                 } else if (mSupplicantState == SupplicantState.ASSOCIATING) {
                     newState = States.STATE_WIFI_CONNECTING;
-                    newStateDetail = res.getString(R.string.associating);;
+                    newStateDetail = res.getString(R.string.state_associating);;
                 } else if (mSupplicantState == SupplicantState.ASSOCIATED) {
                     newState = States.STATE_WIFI_CONNECTING;
-                    newStateDetail = res.getString(R.string.associated);
+                    newStateDetail = res.getString(R.string.state_associated);
                 } else if (mSupplicantState == SupplicantState.FOUR_WAY_HANDSHAKE ||
                            mSupplicantState == SupplicantState.GROUP_HANDSHAKE) {
                     newState = States.STATE_WIFI_CONNECTING;
-                    newStateDetail = res.getString(R.string.handshaking);
+                    newStateDetail = res.getString(R.string.state_handshaking);
                 } else if (mSupplicantState == SupplicantState.COMPLETED) {
                     newState = States.STATE_WIFI_COMPLETED;
-                    newStateDetail = res.getString(R.string.handshake_completed);
+                    newStateDetail = res.getString(R.string.state_handshake_completed);
                 } else if (mSupplicantState == SupplicantState.DISCONNECTED) {
                     newState = States.STATE_WIFI_SCANNING;
-                    newStateDetail = res.getString(R.string.disconnected);
+                    newStateDetail = res.getString(R.string.state_disconnected);
                 }
             }
         }
