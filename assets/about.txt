@@ -1,6 +1,8 @@
 Copyright 2010-2011 Orange leaf
 
 [History]
+v0.7
+- Added reconnect option on tap notification.
 v0.6
 - Added action setting on tap notification.
 v0.5
