@@ -12,10 +12,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="WifiStatePreferencesActivity" />
+        <activity android:name="net.orleaf.android.wifistate.core.WifiStatePreferencesActivity" />
         <activity android:name="net.orleaf.android.AboutActivity"
             android:theme="@android:style/Theme.Dialog" />
-        <receiver android:name=".WifiStateReceiver">
+        <receiver android:name="net.orleaf.android.wifistate.core.WifiStateReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -29,8 +29,8 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
-        <receiver android:name="WifiStateLaunchReceiver" />
-        <service android:name="WifiStateControlService" />
+        <receiver android:name="net.orleaf.android.wifistate.core.WifiStateLaunchReceiver" />
+        <service android:name="net.orleaf.android.wifistate.core.WifiStateControlService" />
     </application>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

@@ -2,6 +2,8 @@ package net.orleaf.android;
 
 import java.io.IOException;
 
+import net.orleaf.android.wifistate.core.R;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -12,8 +14,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
-
-import net.orleaf.android.wifistate.R;
 
 public class AboutActivity extends Activity
 {

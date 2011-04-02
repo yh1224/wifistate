@@ -1,4 +1,4 @@
-package net.orleaf.android.wifistate;
+package net.orleaf.android.wifistate.core;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,7 +26,8 @@ public class WifiStateLaunchReceiver extends BroadcastReceiver {
         } else if (onTap.equals("reenable_wifi")) {
             WifiStateControlService.startSerivce(context, WifiStateControlService.ACTION_WIFI_REENABLE);
         } else {
-            Intent launchIntent = new Intent(context, WifiStateActivity.class);
+            Intent launchIntent = new Intent();
+            launchIntent.setClassName(context.getPackageName(), context.getPackageName() + ".WifiStateActivity");
             launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(launchIntent);
         }

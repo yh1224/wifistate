@@ -1,4 +1,11 @@
-bin/
 dist/
-gen/
+work/
+WifiStateCore/bin/
+WifiStateCore/gen/
+WifiStateFree/bin/
+WifiStateFree/gen/
+WifiStateFree/proguard/
+WifiStatePlus/bin/
+WifiStatePlus/gen/
+WifiStatePlus/proguard/
 *.bak
