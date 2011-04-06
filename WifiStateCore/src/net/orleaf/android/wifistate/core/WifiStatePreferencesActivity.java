@@ -3,6 +3,7 @@ package net.orleaf.android.wifistate.core;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 
@@ -13,13 +14,23 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener
 {
     private ListPreference mPrefActionOnTap;
+    private EditTextPreference mPrefPingTarget;
+    private NumberSeekbarPreference mPrefPingInterval;
+    private NumberSeekbarPreference mPrefPingRetry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
-        
+        if (WifiState.isFreeVersion(this)) {
+            addPreferencesFromResource(R.xml.preferences_free);
+        } else {
+            addPreferencesFromResource(R.xml.preferences);
+        }
+
         mPrefActionOnTap = (ListPreference) findPreference(WifiStatePreferences.PREF_ACTION_ON_TAP_KEY);
+        mPrefPingTarget = (EditTextPreference) findPreference(WifiStatePreferences.PREF_PING_TARGET_KEY);
+        mPrefPingInterval = (NumberSeekbarPreference) findPreference(WifiStatePreferences.PREF_PING_INTERVAL_KEY);
+        mPrefPingRetry = (NumberSeekbarPreference) findPreference(WifiStatePreferences.PREF_PING_RETRY_KEY);
 
         updateSummary();
     }
@@ -68,6 +79,25 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
                 getEntryString(mPrefActionOnTap.getValue(),
                     getResources().getStringArray(R.array.entries_action_on_tap),
                     getResources().getStringArray(R.array.entryvalues_action_on_tap)));
+        if (!WifiState.isFreeVersion(this)) {
+            if (mPrefPingTarget.getText() == null || mPrefPingTarget.getText().equals("")) {
+                mPrefPingTarget.setSummary(
+                        getResources().getString(R.string.pref_ping_target_default));
+            } else {
+                mPrefPingTarget.setSummary(mPrefPingTarget.getText());
+            }
+            mPrefPingInterval.setSummary(
+                    mPrefPingInterval.getValue() +
+                    getResources().getString(R.string.pref_ping_interval_unit));
+            if (mPrefPingRetry.getValue() == 0) {
+                mPrefPingRetry.setSummary(
+                        getResources().getString(R.string.pref_ping_retry_zero));
+            } else {
+                mPrefPingRetry.setSummary(
+                        mPrefPingRetry.getValue() +
+                        getResources().getString(R.string.pref_ping_retry_unit));
+            }
+        }
     }
 
     private void updateService() {

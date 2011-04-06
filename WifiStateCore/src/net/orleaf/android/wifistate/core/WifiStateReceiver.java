@@ -20,10 +20,17 @@ public class WifiStateReceiver extends BroadcastReceiver {
     private static final int NOTIFICATIONID_ICON = 1;
     private static final String ACTION_CLEAR_NOTIFICATION = "net.orleaf.android.wifistate.CLEAR_NOTIFICATION";
 
+    public static final String ACTION_REACHABILITY = "net.orleaf.android.wifistate.ACTION_RECHABLILITY";
+    public static final String EXTRA_REACHABLE = "reachable";
+    public static final String EXTRA_COUNT_OK = "ok";
+    public static final String EXTRA_COUNT_NG = "ng";
+    public static final String EXTRA_COUNT_TOTAL = "total";
+
     private static Context mCtx;
     private static NetworkStateInfo mNetworkStateInfo;
     private static MyPhoneStateListener mPhoneStateListener;
     private static TelephonyManager mTelManager;
+    private static boolean mReachable;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -54,8 +61,24 @@ public class WifiStateReceiver extends BroadcastReceiver {
                     !intent.getData().equals(Uri.fromParts("package", mCtx.getPackageName(), null))) {
                     return;
                 }
-            } else
-            if (intent.getAction().equals(ACTION_CLEAR_NOTIFICATION)) {
+            } else if (intent.getAction().equals(ACTION_REACHABILITY)) {
+                boolean reachable = intent.getBooleanExtra(EXTRA_REACHABLE, true);
+                if (reachable != mReachable) {
+                    mReachable = reachable;
+                    String message = mNetworkStateInfo.getStateMessage();
+                    if (WifiState.DEBUG) {
+                        int ok = intent.getIntExtra("ok", 0);
+                        int total = intent.getIntExtra("total", 0);
+                        message += " ping:" + ok + "/" + total;
+                    }
+                    if (mReachable) {
+                        showNotificationIcon(context, mNetworkStateInfo.getIcon(), message);
+                    } else {
+                        showNotificationIcon(context, R.drawable.state_warn, message);
+                    }
+                }
+                return;
+            } else if (intent.getAction().equals(ACTION_CLEAR_NOTIFICATION)) {
                 // 状態が変わっているかもしれないので再度チェックして消去可能なら消去
                 if (mNetworkStateInfo.isClearableState()) {
                     clearNotificationIcon(mCtx);
@@ -85,12 +108,16 @@ public class WifiStateReceiver extends BroadcastReceiver {
      */
     private void updateState(Context ctx) {
         if (mNetworkStateInfo.update()) {
-            String notifyMessage = mNetworkStateInfo.getDetail();
-            String networkName = mNetworkStateInfo.getNetworkName();
-            if (networkName != null) {
-                notifyMessage += " (" + networkName + ")";
+            showNotificationIcon(ctx, mNetworkStateInfo.getIcon(), mNetworkStateInfo.getStateMessage());
+            if (!WifiState.isFreeVersion(ctx) && WifiStatePreferences.getPing(ctx)) {
+                if (mNetworkStateInfo.getState().equals(NetworkStateInfo.States.STATE_WIFI_CONNECTED) ||
+                        mNetworkStateInfo.getState().equals(NetworkStateInfo.States.STATE_MOBILE_CONNECTED)) {
+                    mReachable = true;
+                    WifiStatePingService.startService(ctx, mNetworkStateInfo.getGatewayIpAddress());
+                } else {
+                    WifiStatePingService.stopService(ctx);
+                }
             }
-            showNotificationIcon(ctx, mNetworkStateInfo.getState(), notifyMessage);
             if (mNetworkStateInfo.isClearableState()) {
                 // 3秒後に消去
                 long next = SystemClock.elapsedRealtime() + 3000;
@@ -148,10 +175,10 @@ public class WifiStateReceiver extends BroadcastReceiver {
     /**
      * 通知バーにアイコンを表示
      */
-    public static void showNotificationIcon(Context ctx, NetworkStateInfo.States state, String notify_text) {
+    public static void showNotificationIcon(Context ctx, int iconRes, String notify_text) {
         NotificationManager notificationManager = (NotificationManager)
                 ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification(mNetworkStateInfo.getIcon(),
+        Notification notification = new Notification(iconRes,
                 ctx.getResources().getString(R.string.app_name), System.currentTimeMillis());
         Intent intent = new Intent(ctx, WifiStateLaunchReceiver.class);
         PendingIntent contentIntent = PendingIntent.getBroadcast(ctx, 0, intent, 0);

@@ -3,6 +3,8 @@
     <string name="about">バージョン情報</string>
     <string name="feedback">報告</string>
     <string name="preferences">設定</string>
+    <string name="preferences_notification">通知設定</string>
+    <string name="preferences_ping">監視設定</string>
     <string name="pref_enable_title">有効化</string>
     <string name="pref_enable_summary">接続処理状態を通知バーに表示します。</string>
     <string name="pref_clearable_title">消去可能</string>
@@ -14,6 +16,15 @@
     <string name="pref_show_data_network_title">モバイルネットワーク</string>
     <string name="pref_show_data_network_summary">Wi-Fi無効時に、モバイルネットワークの接続状態を表示します。</string>
     <string name="pref_action_on_tap_title">タップ時の動作</string>
+    <string name="pref_ping_title">疎通監視</string>
+    <string name="pref_ping_summary">ネットワーク接続時に疎通監視をおこないます。</string>
+    <string name="pref_ping_target_title">監視先</string>
+    <string name="pref_ping_target_default">デフォルトルータ</string>
+    <string name="pref_ping_interval_title">監視間隔</string>
+    <string name="pref_ping_interval_unit">秒</string>
+    <string name="pref_ping_retry_title">リトライ回数</string>
+    <string name="pref_ping_retry_unit">回</string>
+    <string name="pref_ping_retry_zero">リトライしない</string>
     <string name="state_enabling">Wi-Fi有効化中</string>
     <string name="state_enabled">Wi-Fi有効</string>
     <string name="state_scanning">スキャン中</string>

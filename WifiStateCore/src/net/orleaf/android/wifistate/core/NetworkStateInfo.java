@@ -246,6 +246,17 @@ public class NetworkStateInfo {
     }
 
     /**
+     * メッセージ
+     */
+    public String getStateMessage() {
+        String message = mStateDetail;
+        if (mNetworkName != null) {
+            message += " (" + mNetworkName + ")";
+        }
+        return message;
+    }
+
+    /**
      * ネットワークの状態を取得
      */
     public String getDetail() {

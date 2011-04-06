@@ -3,6 +3,8 @@
     <string name="app_name">Wifi State</string>
     <string name="ok">OK</string>
     <string name="preferences">Preferences</string>
+    <string name="preferences_notification">Notification</string>
+    <string name="preferences_ping">Health indicate</string>
     <string name="about">About</string>
     <string name="feedback">Feedback</string>
     <string name="feedback_to">yh1224%2Borange@gmail.com</string>
@@ -17,6 +19,15 @@
     <string name="pref_show_data_network_title">Mobile network</string>
     <string name="pref_show_data_network_summary">Show mobile network status when Wi-Fi disabled.</string>
     <string name="pref_action_on_tap_title">Action on tap notification</string>
+    <string name="pref_ping_title">Check network</string>
+    <string name="pref_ping_summary">Check reachability to specified host.</string>
+    <string name="pref_ping_target_title">Target host</string>
+    <string name="pref_ping_target_default">Default router</string>
+    <string name="pref_ping_interval_title">Interval</string>
+    <string name="pref_ping_interval_unit">sec.</string>
+    <string name="pref_ping_retry_title">Retry count</string>
+    <string name="pref_ping_retry_unit"></string>
+    <string name="pref_ping_retry_zero">No retry</string>
     <string name="state_enabling">Enabling Wi-Fi</string>
     <string name="state_enabled">Wi-Fi enabled</string>
     <string name="state_scanning">Scanning</string>
