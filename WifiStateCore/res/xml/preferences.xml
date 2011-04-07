@@ -33,7 +33,7 @@
             android:defaultValue="false" android:dependency="enabled" />
         <EditTextPreference android:key="ping_target"
             android:title="@string/pref_ping_target_title"
-            android:dependency="ping" />
+            android:defaultValue="www.google.com" android:dependency="ping" />
         <net.orleaf.android.wifistate.core.NumberSeekbarPreference
             android:key="ping_interval" android:title="@string/pref_ping_interval_title"
             android:defaultValue="10" android:dependency="ping"
@@ -41,7 +41,6 @@
         <net.orleaf.android.wifistate.core.NumberSeekbarPreference
             android:key="ping_retry" android:title="@string/pref_ping_retry_title"
             android:defaultValue="3" android:dependency="ping" maxValue="10"
-            zero="@string/pref_ping_retry_zero"
-            unit="@string/pref_ping_retry_unit" />
+            zero="@string/pref_ping_retry_zero" unit="@string/pref_ping_retry_unit" />
     </PreferenceCategory>
 </PreferenceScreen>

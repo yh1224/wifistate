@@ -30,6 +30,7 @@ public class WifiStatePreferences
     public static final boolean PREF_PING_DEFAULT = false;
 
     public static final String PREF_PING_TARGET_KEY = "ping_target";
+    public static final String PREF_PING_TARGET_DEAFULT = "www.google.com";
 
     public static final String PREF_PING_INTERVAL_KEY = "ping_interval";
     public static final int PREF_PING_INTERVAL_DEFAULT = 10;
@@ -81,7 +82,8 @@ public class WifiStatePreferences
 
     public static String getPingTarget(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx).getString(
-                WifiStatePreferences.PREF_PING_TARGET_KEY, null);
+                WifiStatePreferences.PREF_PING_TARGET_KEY,
+                WifiStatePreferences.PREF_PING_TARGET_DEAFULT);
     }
 
     public static int getPingInterval(Context ctx) {
