@@ -191,8 +191,7 @@ public class NetworkStateInfo {
         if (WifiStatePreferences.getClearOnDisabled(mCtx) && mState == States.STATE_DISABLED) {
             return true;
         }
-        if (WifiStatePreferences.getClearOnConnected(mCtx) &&
-                    (mState == States.STATE_WIFI_CONNECTED || mState == States.STATE_MOBILE_CONNECTED)) {
+        if (WifiStatePreferences.getClearOnConnected(mCtx) && isConnected()) {
             return true;
         }
         return false;
@@ -236,6 +235,13 @@ public class NetworkStateInfo {
      */
     public States getState() {
         return mState;
+    }
+
+    /**
+     * ネットワークに接続中かどうか
+     */
+    public boolean isConnected() {
+        return (mState.equals(States.STATE_MOBILE_CONNECTED) || mState.equals(States.STATE_WIFI_CONNECTED));
     }
 
     /**

@@ -62,19 +62,21 @@ public class WifiStateReceiver extends BroadcastReceiver {
                     return;
                 }
             } else if (intent.getAction().equals(ACTION_REACHABILITY)) {
-                boolean reachable = intent.getBooleanExtra(EXTRA_REACHABLE, true);
-                if (reachable != mReachable) {
-                    mReachable = reachable;
-                    String message = mNetworkStateInfo.getStateMessage();
-                    if (WifiState.DEBUG) {
-                        int ok = intent.getIntExtra("ok", 0);
-                        int total = intent.getIntExtra("total", 0);
-                        message += " ping:" + ok + "/" + total;
-                    }
-                    if (mReachable) {
-                        showNotificationIcon(context, mNetworkStateInfo.getIcon(), message);
-                    } else {
-                        showNotificationIcon(context, R.drawable.state_warn, message);
+                if (mNetworkStateInfo.isConnected()) {  // 接続中のみ
+                    boolean reachable = intent.getBooleanExtra(EXTRA_REACHABLE, true);
+                    if (reachable != mReachable) {
+                        mReachable = reachable;
+                        String message = mNetworkStateInfo.getStateMessage();
+                        if (WifiState.DEBUG) {
+                            int ok = intent.getIntExtra("ok", 0);
+                            int total = intent.getIntExtra("total", 0);
+                            message += " ping:" + ok + "/" + total;
+                        }
+                        if (mReachable) {
+                            showNotificationIcon(context, mNetworkStateInfo.getIcon(), message);
+                        } else {
+                            showNotificationIcon(context, R.drawable.state_warn, message);
+                        }
                     }
                 }
                 return;
@@ -110,8 +112,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
         if (mNetworkStateInfo.update()) {
             showNotificationIcon(ctx, mNetworkStateInfo.getIcon(), mNetworkStateInfo.getStateMessage());
             if (!WifiState.isFreeVersion(ctx) && WifiStatePreferences.getPing(ctx)) {
-                if (mNetworkStateInfo.getState().equals(NetworkStateInfo.States.STATE_WIFI_CONNECTED) ||
-                        mNetworkStateInfo.getState().equals(NetworkStateInfo.States.STATE_MOBILE_CONNECTED)) {
+                if (mNetworkStateInfo.isConnected()) {
                     mReachable = true;
                     WifiStatePingService.startService(ctx, mNetworkStateInfo.getGatewayIpAddress());
                 } else {
