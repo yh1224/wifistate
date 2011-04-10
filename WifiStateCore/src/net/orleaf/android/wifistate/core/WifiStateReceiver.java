@@ -99,7 +99,9 @@ public class WifiStateReceiver extends BroadcastReceiver {
         @Override
         public void onDataConnectionStateChanged(int state) {
             super.onDataConnectionStateChanged(state);
-            updateState(mCtx);
+            if (mNetworkStateInfo != null) {
+                updateState(mCtx);
+            }
         }
     };
 
@@ -135,11 +137,11 @@ public class WifiStateReceiver extends BroadcastReceiver {
      * @param ctx
      */
     public static void disable(Context ctx) {
-        mNetworkStateInfo = null;
         if (mPhoneStateListener != null) {
             mTelManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
             mPhoneStateListener = null;
         }
+        mNetworkStateInfo = null;
     }
 
     /**
