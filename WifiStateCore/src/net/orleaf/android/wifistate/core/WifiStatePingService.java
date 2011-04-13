@@ -35,6 +35,7 @@ public class WifiStatePingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        start();
     }
 
     @Override
@@ -48,7 +49,13 @@ public class WifiStatePingService extends Service {
         } else {
             mTarget = target;
         }
+        start();
+    }
 
+    /**
+     * 監視開始
+     */
+    private void start() {
         if (WifiState.DEBUG) Log.d(WifiState.TAG, "Target: " + mTarget);
         if (mTarget != null) {
             mNumPing = 0;
@@ -61,7 +68,7 @@ public class WifiStatePingService extends Service {
     }
 
     /**
-     * 監視開始
+     * 監視スレッド開始
      */
     private void startThread() {
         mThead = new Thread() {
@@ -73,29 +80,31 @@ public class WifiStatePingService extends Service {
 
                     boolean reachable = false;
                     int ntry = WifiStatePreferences.getPingRetry(WifiStatePingService.this) + 1;
-                    if (TESTMODE) {
+                    for (int i = 0; i < ntry; i++) {
                         mNumPing++;
-                        if ((mNumPing % 2) == 0) {
-                            mNumOk++;
-                            reachable = true;
-                        } else {
-                            reachable = false;
-                        }
-                    } else {
-                        for (int i = 0; i < ntry; i++) {
-                            mNumPing++;
-                            reachable = ping(mTarget, 1000);
-                            if (reachable) {
-                                mNumOk++;
-                               break;
+                        if (TESTMODE) {
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
+                            reachable = !mReachable;
+                        } else {
+                            reachable = ping(mTarget, 1000);
+                        }
+                        if (reachable) {
+                            mNumOk++;
+                        } else {
                             mNumNg++;
                         }
+                        if (reachable != mReachable) {
+                            notifyReachability(reachable);
+                        }
+                        mReachable = reachable;
+                        if (reachable) {
+                            break;
+                        }
                     }
-                    if (reachable != mReachable) {
-                        notifyReachability(reachable);
-                    }
-                    mReachable = reachable;
                     try {
                         Thread.sleep(WifiStatePreferences.getPingInterval(WifiStatePingService.this) * 1000);
                     } catch (InterruptedException e) {
@@ -159,7 +168,10 @@ public class WifiStatePingService extends Service {
         mRunning = true;
         mThead.start();
     }
-    
+
+    /**
+     * 監視停止
+     */
     private void stopThread() {
         if (mThead != null) {
             mRunning = false;
