@@ -113,7 +113,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
     private void updateState(Context ctx) {
         if (mNetworkStateInfo.update()) {
             showNotificationIcon(ctx, mNetworkStateInfo.getIcon(), mNetworkStateInfo.getStateMessage());
-            if (!WifiState.isFreeVersion(ctx) && WifiStatePreferences.getPing(ctx)) {
+            if (!WifiState.isLiteVersion(ctx) && WifiStatePreferences.getPing(ctx)) {
                 if (mNetworkStateInfo.isConnected()) {
                     mReachable = true;
                     WifiStatePingService.startService(ctx, mNetworkStateInfo.getGatewayIpAddress());

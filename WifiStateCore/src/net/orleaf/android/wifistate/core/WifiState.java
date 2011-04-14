@@ -6,7 +6,7 @@ public class WifiState {
     public static final String TAG = "WifiState";
     public static final String MARKET_URL = "market://details?id=net.orleaf.android.wifistate.plus";
 
-    private static String PACKAGE_NAME_FREE = "net.orleaf.android.wifistate";
+    private static String PACKAGE_NAME_LITE = "net.orleaf.android.wifistate.lite";
 
     public static final boolean DEBUG = false;
 
@@ -15,8 +15,8 @@ public class WifiState {
      *
      * @param ctx Context
      */
-    public static boolean isFreeVersion(Context ctx) {
-        return ctx.getPackageName().equals(PACKAGE_NAME_FREE);
+    public static boolean isLiteVersion(Context ctx) {
+        return ctx.getPackageName().equals(PACKAGE_NAME_LITE);
     }
 
 }

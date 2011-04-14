@@ -2,9 +2,9 @@ dist/
 work/
 WifiStateCore/bin/
 WifiStateCore/gen/
-WifiStateFree/bin/
-WifiStateFree/gen/
-WifiStateFree/proguard/
+WifiStateLite/bin/
+WifiStateLite/gen/
+WifiStateLite/proguard/
 WifiStatePlus/bin/
 WifiStatePlus/gen/
 WifiStatePlus/proguard/

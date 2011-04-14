@@ -21,7 +21,7 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (WifiState.isFreeVersion(this)) {
+        if (WifiState.isLiteVersion(this)) {
             addPreferencesFromResource(R.xml.preferences_free);
         } else {
             addPreferencesFromResource(R.xml.preferences);
@@ -79,7 +79,7 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
                 getEntryString(mPrefActionOnTap.getValue(),
                     getResources().getStringArray(R.array.entries_action_on_tap),
                     getResources().getStringArray(R.array.entryvalues_action_on_tap)));
-        if (!WifiState.isFreeVersion(this)) {
+        if (!WifiState.isLiteVersion(this)) {
             if (mPrefPingTarget.getText() == null || mPrefPingTarget.getText().equals("")) {
                 mPrefPingTarget.setSummary(
                         getResources().getString(R.string.pref_ping_target_default));
