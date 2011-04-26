@@ -8,10 +8,13 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 
 /**
@@ -26,16 +29,44 @@ public class WifiStatePingService extends Service {
 
     private boolean mReachable;
     private String mTarget;
-    private Thread mThead = null;
+    private Thread mThread = null;
     private boolean mRunning;
     private int mNumPing;
     private int mNumOk;
     private int mNumNg;
 
+    private BroadcastReceiver mScreenReceiver;
+
     @Override
     public void onCreate() {
         super.onCreate();
-        start();
+
+        // ACTION_SCREEN_ON レシーバの登録
+        mScreenReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (WifiState.DEBUG) Log.d(WifiState.TAG, "received intent: " + intent.getAction());
+                if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                    start();
+                } if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                    stopThread();
+                }
+            }
+        };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(mScreenReceiver, filter);
+
+        // 画面ONなら監視開始
+        boolean screenOn = true;
+        try {
+	        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            screenOn = (Boolean) PowerManager.class.getMethod("isScreenOn").invoke(pm);
+        } catch (Exception e) {}
+        if (screenOn) {
+            start();
+        }
     }
 
     @Override
@@ -71,111 +102,20 @@ public class WifiStatePingService extends Service {
      * 監視スレッド開始
      */
     private void startThread() {
-        mThead = new Thread() {
-            @Override
-            public void run() {
-                if (WifiState.DEBUG) Log.d(WifiState.TAG, "Thread started.");
-                while (mRunning) {
-                    if (WifiState.DEBUG) Log.d(WifiState.TAG, "Pinging: " + mTarget);
-
-                    boolean reachable = false;
-                    int ntry = WifiStatePreferences.getPingRetry(WifiStatePingService.this) + 1;
-                    for (int i = 0; i < ntry; i++) {
-                        mNumPing++;
-                        if (TESTMODE) {
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            reachable = !mReachable;
-                        } else {
-                            reachable = ping(mTarget, 1000);
-                        }
-                        if (reachable) {
-                            mNumOk++;
-                        } else {
-                            mNumNg++;
-                        }
-                        if (reachable != mReachable) {
-                            notifyReachability(reachable);
-                        }
-                        mReachable = reachable;
-                        if (reachable) {
-                            break;
-                        }
-                    }
-                    try {
-                        Thread.sleep(WifiStatePreferences.getPingInterval(WifiStatePingService.this) * 1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (WifiState.DEBUG) Log.d(WifiState.TAG, "Thread stoppped.");
-            }
-
-            /**
-             * ping
-             */
-            private boolean ping(String target, int timeout) {
-                boolean result = false;
-
-                InetAddress inetAddress = null;
-                try {
-                    inetAddress = InetAddress.getByName(target);
-                } catch (UnknownHostException e) {
-                    Log.e(WifiState.TAG, "name resolution failed: " + target);
-                    e.printStackTrace();
-                }
-                if (inetAddress != null) {
-                    try {
-                        String[] cmdLine = new String[] { "ping", "-c", "1", inetAddress.getHostAddress() };
-                        Process process = Runtime.getRuntime().exec(cmdLine);
-                        process.waitFor();
-                        //String out = readAll(process.getInputStream());
-                        //String err = readAll(process.getErrorStream());
-                        process.destroy();
-                        if (process.exitValue() == 0) {
-                            if (WifiState.DEBUG) Log.d(WifiState.TAG, "ping success: " + inetAddress.getHostAddress());
-                            result = true;
-                        } else {
-                            Log.e(WifiState.TAG, "ping failed: " + inetAddress.getHostAddress());
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return result;
-            }
-
-            /**
-             * 結果を取得する
-             */
-            @SuppressWarnings("unused")
-            private String readAll(InputStream stream) throws IOException {
-                String line;
-                BufferedReader reader = new BufferedReader(new InputStreamReader(stream), 1024);
-                StringBuffer msg = new StringBuffer();
-                while ((line = reader.readLine()) != null) {
-                    if (WifiState.DEBUG) Log.v(WifiState.TAG, " |" + line);
-                    msg.append(line + "\n");
-                }
-                return msg.toString().trim();
-            }
-        };
+        if (mThread == null) {
+            mThread = new PingThread();
+            mThread.start();
+        }
         mRunning = true;
-        mThead.start();
     }
 
     /**
      * 監視停止
      */
     private void stopThread() {
-        if (mThead != null) {
+        if (mThread != null) {
             mRunning = false;
-            mThead = null;
+            mThread = null;
         }
     }
 
@@ -194,6 +134,9 @@ public class WifiStatePingService extends Service {
 
     public void onDestroy() {
         stopThread();
+
+        // レシーバ解除
+        unregisterReceiver(mScreenReceiver);
     }
 
     @Override
@@ -202,6 +145,102 @@ public class WifiStatePingService extends Service {
     }
 
 
+    private class PingThread extends Thread {
+        @Override
+        public void run() {
+            if (WifiState.DEBUG) Log.d(WifiState.TAG, "Thread started.");
+            while (mRunning) {
+                if (WifiState.DEBUG) Log.d(WifiState.TAG, "Pinging: " + mTarget);
+
+                boolean reachable = false;
+                int ntry = WifiStatePreferences.getPingRetry(WifiStatePingService.this) + 1;
+                for (int i = 0; i < ntry; i++) {
+                    mNumPing++;
+                    if (TESTMODE) {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        reachable = !mReachable;
+                    } else {
+                        reachable = ping(mTarget, 1000);
+                    }
+                    if (reachable) {
+                        mNumOk++;
+                    } else {
+                        mNumNg++;
+                    }
+                    if (reachable != mReachable) {
+                        notifyReachability(reachable);
+                    }
+                    mReachable = reachable;
+                    if (reachable) {
+                        break;
+                    }
+                }
+                try {
+                    Thread.sleep(WifiStatePreferences.getPingInterval(WifiStatePingService.this) * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (WifiState.DEBUG) Log.d(WifiState.TAG, "Thread stoppped.");
+        }
+
+        /**
+         * ping
+         */
+        private boolean ping(String target, int timeout) {
+            boolean result = false;
+
+            InetAddress inetAddress = null;
+            try {
+                inetAddress = InetAddress.getByName(target);
+            } catch (UnknownHostException e) {
+                Log.e(WifiState.TAG, "name resolution failed: " + target);
+                e.printStackTrace();
+            }
+            if (inetAddress != null) {
+                try {
+                    String[] cmdLine = new String[] { "ping", "-c", "1", inetAddress.getHostAddress() };
+                    Process process = Runtime.getRuntime().exec(cmdLine);
+                    process.waitFor();
+                    //String out = readAll(process.getInputStream());
+                    //String err = readAll(process.getErrorStream());
+                    process.destroy();
+                    if (process.exitValue() == 0) {
+                        if (WifiState.DEBUG) Log.d(WifiState.TAG, "ping success: " + inetAddress.getHostAddress());
+                        result = true;
+                    } else {
+                        Log.e(WifiState.TAG, "ping failed: " + inetAddress.getHostAddress());
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return result;
+        }
+
+        /**
+         * 結果を取得する
+         */
+        @SuppressWarnings("unused")
+        private String readAll(InputStream stream) throws IOException {
+            String line;
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream), 1024);
+            StringBuffer msg = new StringBuffer();
+            while ((line = reader.readLine()) != null) {
+                if (WifiState.DEBUG) Log.v(WifiState.TAG, " |" + line);
+                msg.append(line + "\n");
+            }
+            return msg.toString().trim();
+        }
+    }
+
+    
     /**
      * サービス開始
      */
