@@ -18,6 +18,8 @@
     <string name="pref_action_on_tap_title">タップ時の動作</string>
     <string name="pref_ping_title">疎通監視</string>
     <string name="pref_ping_summary">ネットワーク接続時に疎通監視をおこないます。</string>
+    <string name="pref_ping_on_mobile_title">モバイルネットワーク</string>
+    <string name="pref_ping_on_mobile_summary">モバイルネットワーク接続時も監視をおこないます。</string>
     <string name="pref_ping_target_title">監視先</string>
     <string name="pref_ping_target_default">デフォルトルータ</string>
     <string name="pref_ping_interval_title">監視間隔</string>

@@ -31,6 +31,10 @@
         <CheckBoxPreference android:key="ping"
             android:title="@string/pref_ping_title" android:summary="@string/pref_ping_summary"
             android:defaultValue="false" android:dependency="enabled" />
+        <CheckBoxPreference android:key="ping_on_mobile"
+            android:title="@string/pref_ping_on_mobile_title"
+            android:summary="@string/pref_ping_on_mobile_summary"
+            android:defaultValue="true" android:dependency="ping" />
         <EditTextPreference android:key="ping_target"
             android:title="@string/pref_ping_target_title"
             android:defaultValue="www.google.com" android:dependency="ping" />

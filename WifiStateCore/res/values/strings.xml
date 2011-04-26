@@ -21,6 +21,8 @@
     <string name="pref_action_on_tap_title">Action on tap notification</string>
     <string name="pref_ping_title">Check network</string>
     <string name="pref_ping_summary">Check reachability to specified host.</string>
+    <string name="pref_ping_on_mobile_title">Mobile network</string>
+    <string name="pref_ping_on_mobile_summary">Also check on mobile network.</string>
     <string name="pref_ping_target_title">Target host</string>
     <string name="pref_ping_target_default">Default router</string>
     <string name="pref_ping_interval_title">Interval</string>

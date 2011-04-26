@@ -114,7 +114,9 @@ public class WifiStateReceiver extends BroadcastReceiver {
         if (mNetworkStateInfo.update()) {
             showNotificationIcon(ctx, mNetworkStateInfo.getIcon(), mNetworkStateInfo.getStateMessage());
             if (!WifiState.isLiteVersion(ctx) && WifiStatePreferences.getPing(ctx)) {
-                if (mNetworkStateInfo.isConnected()) {
+                if (mNetworkStateInfo.getState().equals(NetworkStateInfo.States.STATE_WIFI_CONNECTED) ||
+                        (mNetworkStateInfo.getState().equals(NetworkStateInfo.States.STATE_MOBILE_CONNECTED) &&
+                                WifiStatePreferences.getPingOnMobile(ctx) == true)) {
                     mReachable = true;
                     WifiStatePingService.startService(ctx, mNetworkStateInfo.getGatewayIpAddress());
                 } else {

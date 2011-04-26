@@ -29,6 +29,9 @@ public class WifiStatePreferences
     public static final String PREF_PING_KEY = "ping";
     public static final boolean PREF_PING_DEFAULT = false;
 
+    public static final String PREF_PING_ON_MOBILE_KEY = "ping_on_mobile";
+    public static final boolean PREF_PING_ON_MOBILE_DEFAULT = true;
+
     public static final String PREF_PING_TARGET_KEY = "ping_target";
     public static final String PREF_PING_TARGET_DEAFULT = "www.google.com";
 
@@ -78,6 +81,12 @@ public class WifiStatePreferences
         return PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(
                 WifiStatePreferences.PREF_PING_KEY,
                 WifiStatePreferences.PREF_PING_DEFAULT);
+    }
+
+    public static boolean getPingOnMobile(Context ctx) {
+        return PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(
+                WifiStatePreferences.PREF_PING_ON_MOBILE_KEY,
+                WifiStatePreferences.PREF_PING_ON_MOBILE_DEFAULT);
     }
 
     public static String getPingTarget(Context ctx) {
