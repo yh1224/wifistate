@@ -1,5 +1,7 @@
 Copyright 2010-2011 Orange leaf
 
 [History]
+v1.0.1
+- Bug fix
 v1.0
 - First release

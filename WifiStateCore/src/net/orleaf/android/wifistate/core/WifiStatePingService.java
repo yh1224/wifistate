@@ -30,7 +30,6 @@ public class WifiStatePingService extends Service {
     private boolean mReachable;
     private String mTarget;
     private Thread mThread = null;
-    private boolean mRunning;
     private int mNumPing;
     private int mNumOk;
     private int mNumNg;
@@ -106,17 +105,13 @@ public class WifiStatePingService extends Service {
             mThread = new PingThread();
             mThread.start();
         }
-        mRunning = true;
     }
 
     /**
      * 監視停止
      */
     private void stopThread() {
-        if (mThread != null) {
-            mRunning = false;
-            mThread = null;
-        }
+        mThread = null;
     }
 
     /**
@@ -148,8 +143,8 @@ public class WifiStatePingService extends Service {
     private class PingThread extends Thread {
         @Override
         public void run() {
-            if (WifiState.DEBUG) Log.d(WifiState.TAG, "Thread started.");
-            while (mRunning) {
+            if (WifiState.DEBUG) Log.d(WifiState.TAG, "Thread started. (" + getId() + ")");
+            while (this == mThread) {
                 if (WifiState.DEBUG) Log.d(WifiState.TAG, "Pinging: " + mTarget);
 
                 boolean reachable = false;
@@ -185,7 +180,7 @@ public class WifiStatePingService extends Service {
                     e.printStackTrace();
                 }
             }
-            if (WifiState.DEBUG) Log.d(WifiState.TAG, "Thread stoppped.");
+            if (WifiState.DEBUG) Log.d(WifiState.TAG, "Thread stoppped. (" + getId() + ")");
         }
 
         /**
