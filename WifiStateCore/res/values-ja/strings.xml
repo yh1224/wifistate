@@ -10,6 +10,8 @@
     <string name="pref_clearable_summary">通知を消去可能にします。</string>
     <string name="pref_clear_on_connected_title">接続完了時に消去</string>
     <string name="pref_clear_on_connected_summary">接続が完了した場合に消去します。</string>
+    <string name="pref_clear_on_scanning_title">スキャン中に消去</string>
+    <string name="pref_clear_on_scanning_summary">スキャン中は消去します。</string>
     <string name="pref_clear_on_disabled_title">NW無効時に消去</string>
     <string name="pref_clear_on_disabled_summary">ネットワーク無効時に消去します。</string>
     <string name="pref_show_data_network_title">モバイルネットワーク</string>

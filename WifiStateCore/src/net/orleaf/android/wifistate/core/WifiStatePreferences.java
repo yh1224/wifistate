@@ -17,6 +17,9 @@ public class WifiStatePreferences
     public static final String PREF_CLEAR_ON_CONNECTED_KEY = "clear_on_connected";
     public static final boolean PREF_CLEAR_ON_CONNECTED_DEFAULT = false;
 
+    public static final String PREF_CLEAR_ON_SCANNING_KEY = "clear_on_scanning";
+    public static final boolean PREF_CLEAR_ON_SCANNING_DEFAULT = false;
+
     public static final String PREF_CLEAR_ON_DISABLED_KEY = "clear_on_disabled";
     public static final boolean PREF_CLEAR_ON_DISABLED_DEFAULT = false;
 
@@ -57,6 +60,12 @@ public class WifiStatePreferences
         return PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(
                 WifiStatePreferences.PREF_CLEAR_ON_CONNECTED_KEY,
                 WifiStatePreferences.PREF_CLEAR_ON_CONNECTED_DEFAULT);
+    }
+
+    public static boolean getClearOnScanning(Context ctx) {
+        return PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(
+                WifiStatePreferences.PREF_CLEAR_ON_SCANNING_KEY,
+                WifiStatePreferences.PREF_CLEAR_ON_SCANNING_DEFAULT);
     }
 
     public static boolean getClearOnDisabled(Context ctx) {

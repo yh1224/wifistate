@@ -14,6 +14,10 @@
             android:title="@string/pref_clear_on_disabled_title"
             android:summary="@string/pref_clear_on_disabled_summary"
             android:defaultValue="false" android:dependency="enabled" />
+        <CheckBoxPreference android:key="clear_on_scanning"
+            android:title="@string/pref_clear_on_scanning_title"
+            android:summary="@string/pref_clear_on_scanning_summary"
+            android:defaultValue="false" android:dependency="enabled" />
         <CheckBoxPreference android:key="show_data_network"
             android:title="@string/pref_show_data_network_title"
             android:summary="@string/pref_show_data_network_summary"

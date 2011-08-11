@@ -13,6 +13,8 @@
     <string name="pref_clearable_summary">Enable to clear manually.</string>
     <string name="pref_clear_on_connected_title">Clear on connected</string>
     <string name="pref_clear_on_connected_summary">Clear when network connected.</string>
+    <string name="pref_clear_on_scanning_title">Clear on scanning</string>
+    <string name="pref_clear_on_scanning_summary">Clear when Wi-Fi scanning.</string>
     <string name="pref_clear_on_disabled_title">Clear on disabled</string>
     <string name="pref_clear_on_disabled_summary">Clear when network disabled.</string>
     <string name="pref_show_data_network_title">Mobile network</string>

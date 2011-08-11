@@ -30,6 +30,7 @@ public class NetworkStateInfo {
     private Context mCtx;
     private String mNetworkName;
     private States mState = States.STATE_DISABLED;
+    private States mMobileState = States.STATE_DISABLED;
     private String mStateDetail = null;
 
     // Managers
@@ -90,21 +91,8 @@ public class NetworkStateInfo {
             //wifiNetworkInfo = null;
             //supplicantConnected = false;
             //supplicantState = null;
-            if (WifiStatePreferences.getShowDataNetwork(mCtx)) {
-                if (mDataConnectionState == TelephonyManager.DATA_CONNECTING) {
-                    newState = States.STATE_MOBILE_CONNECTING;
-                    newStateDetail = res.getString(R.string.state_mobile_connecting);
-                } else if (mDataConnectionState == TelephonyManager.DATA_CONNECTED) {
-                    newState = States.STATE_MOBILE_CONNECTED;
-                    newStateDetail = res.getString(R.string.state_mobile_connected);
-                } else {
-                    newState = States.STATE_DISABLED;
-                    newStateDetail = res.getString(R.string.state_unavailable);
-                }
-            } else {
-                newState = States.STATE_DISABLED;
-                newStateDetail = res.getString(R.string.state_unavailable);
-            }
+            newState = States.STATE_DISABLED;
+            newStateDetail = res.getString(R.string.state_unavailable);
         } else if (mWifiState == WifiManager.WIFI_STATE_ENABLING) {
             // -> enabled
             newState = States.STATE_WIFI_ENABLING;
@@ -150,6 +138,25 @@ public class NetworkStateInfo {
             }
         }
 
+        // モバイルネットワーク状態取得
+        if (WifiStatePreferences.getShowDataNetwork(mCtx)) {
+            // ・Wi-Fi無効時、または
+            // ・スキャン中消去設定が有効でスキャン中
+            if (newState == States.STATE_DISABLED ||
+                    (newState == States.STATE_WIFI_SCANNING && WifiStatePreferences.getClearOnScanning(mCtx))) {
+                if (mDataConnectionState == TelephonyManager.DATA_CONNECTING) {
+                    newState = States.STATE_MOBILE_CONNECTING;
+                    newStateDetail = res.getString(R.string.state_mobile_connecting);
+                } else if (mDataConnectionState == TelephonyManager.DATA_CONNECTED) {
+                    newState = States.STATE_MOBILE_CONNECTED;
+                    newStateDetail = res.getString(R.string.state_mobile_connected);
+                } else {
+                    newState = States.STATE_DISABLED;
+                    newStateDetail = res.getString(R.string.state_unavailable);
+                }
+            }
+        }
+
         if (newState == null) {
             // no change
             if (WifiState.DEBUG) Log.d(WifiState.TAG, "State not recognized.");
@@ -189,9 +196,15 @@ public class NetworkStateInfo {
      */
     public boolean isClearableState() {
         if (WifiStatePreferences.getClearOnDisabled(mCtx) && mState == States.STATE_DISABLED) {
+            // ネットワーク無効時は表示しない
+            return true;
+        }
+        if (WifiStatePreferences.getClearOnScanning(mCtx) && isScanning()) {
+            // スキャン中は表示しない
             return true;
         }
         if (WifiStatePreferences.getClearOnConnected(mCtx) && isConnected()) {
+            // 接続完了時は表示しない
             return true;
         }
         return false;
@@ -235,6 +248,13 @@ public class NetworkStateInfo {
      */
     public States getState() {
         return mState;
+    }
+
+    /**
+     * スキャン中かどうか
+     */
+    public boolean isScanning() {
+        return (mState.equals(States.STATE_WIFI_SCANNING));
     }
 
     /**
