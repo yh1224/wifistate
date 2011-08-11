@@ -1,6 +1,8 @@
 Copyright 2010-2011 Orange leaf
 
 [History]
+v1.0
+- New "Clear on scanning" option.
 v0.7
 - Added reconnect option on tap notification.
 v0.6
