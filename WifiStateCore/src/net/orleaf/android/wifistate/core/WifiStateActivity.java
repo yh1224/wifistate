@@ -135,15 +135,12 @@ public class WifiStateActivity extends Activity {
      */
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        switch (itemId) {
-        case R.id.menu_config:
+        if (itemId == R.id.menu_config) {
             Intent intent = new Intent().setClass(this, WifiStatePreferencesActivity.class);
             startActivity(intent);
-            break;
-        case R.id.menu_about:
-            intent = new Intent().setClass(this, AboutActivity.class);
+        } else if (itemId == R.id.menu_about) {
+            Intent intent = new Intent().setClass(this, AboutActivity.class);
             startActivity(intent);
-            break;
         }
         return true;
     };
