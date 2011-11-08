@@ -167,8 +167,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
                     ctx.getSystemService(Context.NOTIFICATION_SERVICE);
             Notification notification = new Notification(icons[i],
                     ctx.getResources().getString(R.string.app_name), System.currentTimeMillis());
-            Intent intent = new Intent();
-            intent.setClassName("com.android.settings", "com.android.settings.wifi.WifiSettings");
+            Intent intent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
             PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
             notification.setLatestEventInfo(ctx, ctx.getResources().getString(R.string.app_name),
                     "State" + i, contentIntent);

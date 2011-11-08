@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.orleaf.android.wifistate" android:versionCode="12"
-    android:versionName="1.0">
+    package="net.orleaf.android.wifistate" android:versionCode="13"
+    android:versionName="1.1">
     <application android:icon="@drawable/icon"
         android:label="@string/app_name">
         <activity android:label="@string/app_name"
-            android:name=".WifiStateActivity" android:theme="@android:style/Theme.Dialog"
+            android:name=".WifiStateActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="net.orleaf.android.wifistate.core.WifiStatePreferencesActivity" />
+        <activity 
+            android:name="net.orleaf.android.wifistate.core.WifiStateStatusActivity"
+            android:theme="@android:style/Theme.Dialog"
+            android:launchMode="singleInstance">
+        </activity>
+        <activity
+            android:name="net.orleaf.android.wifistate.core.WifiStatePreferencesActivity" />
         <activity android:name="net.orleaf.android.AboutActivity"
             android:theme="@android:style/Theme.Dialog" />
         <receiver android:name="net.orleaf.android.wifistate.core.WifiStateReceiver">
@@ -37,5 +43,5 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-sdk android:minSdkVersion="4" />
+    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="4" />
 </manifest>

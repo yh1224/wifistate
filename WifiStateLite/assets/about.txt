@@ -1,6 +1,8 @@
 Copyright 2010-2011 Orange leaf
 
 [History]
+v1.1
+- Fix for Android 3.0 or later
 v1.0
 - New "Clear on scanning" option.
 v0.7
