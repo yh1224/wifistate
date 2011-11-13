@@ -23,4 +23,11 @@ public class WifiStateActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        launched = false;
+        finish();
+    }
+
 }
