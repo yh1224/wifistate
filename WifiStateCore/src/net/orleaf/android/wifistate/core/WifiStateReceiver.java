@@ -147,7 +147,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
     }
 
     /**
-     * 通知バーにアイコンを表示
+     * ステータスバーにアイコンを表示
      */
     public static void testNotificationIcon(Context ctx) {
         int[] icons = {
@@ -177,7 +177,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
     }
 
     /**
-     * 通知バーにアイコンを表示
+     * ステータスバーにアイコンを表示
      */
     public static void showNotificationIcon(Context ctx, int iconRes, String notify_text) {
         NotificationManager notificationManager = (NotificationManager)
