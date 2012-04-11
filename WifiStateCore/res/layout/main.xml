@@ -1,41 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    <FrameLayout android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:layout_margin="6dp">
-        <LinearLayout android:id="@+id/network"
-            android:orientation="vertical" android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:paddingLeft="2dp">
-            <TextView android:id="@+id/network_name"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp" >
+
+        <LinearLayout
+            android:id="@+id/network"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="2dp" >
+
+            <TextView
+                android:id="@+id/network_name"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" android:textSize="20sp"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
                 android:textStyle="bold" />
-            <TextView android:id="@+id/network_status"
-                android:text="@string/checking_status"
+
+            <TextView
+                android:id="@+id/network_status"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" android:textSize="12sp" />
+                android:layout_height="wrap_content"
+                android:text="@string/checking_status"
+                android:textSize="12sp" />
         </LinearLayout>
-        <LinearLayout android:orientation="vertical"
-            android:layout_width="fill_parent" android:layout_height="wrap_content"
-            android:gravity="right">
-            <ToggleButton android:id="@+id/wifi_toggle"
-                android:textOn="@string/wifi" android:textOff="@string/wifi"
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="vertical" >
+
+            <ToggleButton
+                android:id="@+id/wifi_toggle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:enabled="false" />
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:textOff="@string/wifi"
+                android:textOn="@string/wifi" />
         </LinearLayout>
     </FrameLayout>
-    <LinearLayout android:orientation="horizontal"
-        android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:layout_margin="4dp">
-        <Button android:id="@+id/wifi_settings" android:text="@string/wifi_settings"
-            android:layout_width="fill_parent" android:layout_height="wrap_content"
-            android:layout_weight="1" />
-        <Button android:id="@+id/wifi_reenable" android:text="@string/wifi_reenable"
-            android:layout_width="fill_parent" android:layout_height="wrap_content"
-            android:layout_weight="1" android:enabled="false" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/wifi_settings"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/wifi_settings" />
+
+        <Button
+            android:id="@+id/wifi_reenable"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="@string/wifi_reenable" />
     </LinearLayout>
-    <TextView android:text="@string/press_menu_to_config"
-        android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:textSize="12sp" android:layout_margin="6dp" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:text="@string/press_menu_to_config"
+        android:textSize="12sp" />
+
 </LinearLayout>

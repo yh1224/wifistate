@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Wifi State</string>
     <string name="ok">OK</string>
     <string name="preferences">Settings</string>
@@ -58,4 +59,5 @@
     <string name="toggle_wifi">Toggle Wi-Fi</string>
     <string name="reenable_wifi">Reconnect Wi-Fi</string>
     <string name="open_wifi_settings">Wi-Fi settings</string>
+
 </resources>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string-array name="entries_action_on_tap">
         <item>@string/open_dialog</item>
         <item>@string/toggle_wifi</item>
@@ -12,4 +13,5 @@
         <item>reenable_wifi</item>
         <item>wifi_settings</item>
     </string-array>
+
 </resources>

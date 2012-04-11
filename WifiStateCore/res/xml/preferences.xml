@@ -1,51 +1,86 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference android:key="enabled"
-        android:title="@string/pref_enable_title" android:defaultValue="true" />
-    <PreferenceCategory android:title="@string/preferences_notification">
-        <CheckBoxPreference android:key="clearable"
-            android:title="@string/pref_clearable_title"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="enabled"
+        android:title="@string/pref_enable_title" />
+
+    <PreferenceCategory android:title="@string/preferences_notification" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="enabled"
+            android:key="clearable"
             android:summary="@string/pref_clearable_summary"
-            android:defaultValue="false" android:dependency="enabled" />
-        <CheckBoxPreference android:key="clear_on_connected"
-            android:title="@string/pref_clear_on_connected_title"
+            android:title="@string/pref_clearable_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="enabled"
+            android:key="clear_on_connected"
             android:summary="@string/pref_clear_on_connected_summary"
-            android:defaultValue="false" android:dependency="enabled" />
-        <CheckBoxPreference android:key="clear_on_disabled"
-            android:title="@string/pref_clear_on_disabled_title"
+            android:title="@string/pref_clear_on_connected_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="enabled"
+            android:key="clear_on_disabled"
             android:summary="@string/pref_clear_on_disabled_summary"
-            android:defaultValue="false" android:dependency="enabled" />
-        <CheckBoxPreference android:key="clear_on_scanning"
-            android:title="@string/pref_clear_on_scanning_title"
+            android:title="@string/pref_clear_on_disabled_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="enabled"
+            android:key="clear_on_scanning"
             android:summary="@string/pref_clear_on_scanning_summary"
-            android:defaultValue="false" android:dependency="enabled" />
-        <CheckBoxPreference android:key="show_data_network"
-            android:title="@string/pref_show_data_network_title"
+            android:title="@string/pref_clear_on_scanning_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="enabled"
+            android:key="show_data_network"
             android:summary="@string/pref_show_data_network_summary"
-            android:defaultValue="true" android:dependency="enabled" />
-        <ListPreference android:key="action_on_tap"
-            android:title="@string/pref_action_on_tap_title"
+            android:title="@string/pref_show_data_network_title" />
+
+        <ListPreference
+            android:defaultValue="open_dialog"
+            android:dependency="enabled"
             android:entries="@array/entries_action_on_tap"
             android:entryValues="@array/entryvalues_action_on_tap"
-            android:defaultValue="open_dialog" android:dependency="enabled" />
+            android:key="action_on_tap"
+            android:title="@string/pref_action_on_tap_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/preferences_ping">
-        <CheckBoxPreference android:key="ping"
-            android:title="@string/pref_ping_title" android:summary="@string/pref_ping_summary"
-            android:defaultValue="false" android:dependency="enabled" />
-        <CheckBoxPreference android:key="ping_on_mobile"
-            android:title="@string/pref_ping_on_mobile_title"
+    <PreferenceCategory android:title="@string/preferences_ping" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="enabled"
+            android:key="ping"
+            android:summary="@string/pref_ping_summary"
+            android:title="@string/pref_ping_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="ping"
+            android:key="ping_on_mobile"
             android:summary="@string/pref_ping_on_mobile_summary"
-            android:defaultValue="true" android:dependency="ping" />
-        <EditTextPreference android:key="ping_target"
-            android:title="@string/pref_ping_target_title"
-            android:defaultValue="www.google.com" android:dependency="ping" />
+            android:title="@string/pref_ping_on_mobile_title" />
+
+        <EditTextPreference
+            android:defaultValue="www.google.com"
+            android:dependency="ping"
+            android:key="ping_target"
+            android:title="@string/pref_ping_target_title" />
+
         <net.orleaf.android.wifistate.core.NumberSeekbarPreference
-            android:key="ping_interval" android:title="@string/pref_ping_interval_title"
-            android:defaultValue="10" android:dependency="ping"
-            minValue="10" maxValue="60" unit="@string/pref_ping_interval_unit" />
+            maxValue="60"
+            minValue="10"
+            unit="@string/pref_ping_interval_unit"
+            android:defaultValue="10"
+            android:dependency="ping"
+            android:key="ping_interval"
+            android:title="@string/pref_ping_interval_title" />
         <net.orleaf.android.wifistate.core.NumberSeekbarPreference
-            android:key="ping_retry" android:title="@string/pref_ping_retry_title"
-            android:defaultValue="3" android:dependency="ping" maxValue="10"
-            zero="@string/pref_ping_retry_zero" unit="@string/pref_ping_retry_unit" />
+            maxValue="10"
+            unit="@string/pref_ping_retry_unit"
+            zero="@string/pref_ping_retry_zero"
+            android:defaultValue="3"
+            android:dependency="ping"
+            android:key="ping_retry"
+            android:title="@string/pref_ping_retry_title" />
     </PreferenceCategory>
+
 </PreferenceScreen>

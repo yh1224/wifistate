@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="about">バージョン情報</string>
     <string name="feedback">報告</string>
     <string name="preferences">設定</string>
@@ -55,4 +56,5 @@
     <string name="toggle_wifi">Wi-Fi ON/OFF</string>
     <string name="reenable_wifi">Wi-Fi 再接続</string>
     <string name="open_wifi_settings">Wi-Fi 設定</string>
+
 </resources>

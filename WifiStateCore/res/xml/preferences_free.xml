@@ -1,31 +1,49 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference android:key="enabled"
-        android:title="@string/pref_enable_title" android:defaultValue="true" />
-    <PreferenceCategory android:title="@string/preferences_notification">
-        <CheckBoxPreference android:key="clearable"
-            android:title="@string/pref_clearable_title"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="enabled"
+        android:title="@string/pref_enable_title" />
+
+    <PreferenceCategory android:title="@string/preferences_notification" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="enabled"
+            android:key="clearable"
             android:summary="@string/pref_clearable_summary"
-            android:defaultValue="false" android:dependency="enabled" />
-        <CheckBoxPreference android:key="clear_on_connected"
-            android:title="@string/pref_clear_on_connected_title"
+            android:title="@string/pref_clearable_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="enabled"
+            android:key="clear_on_connected"
             android:summary="@string/pref_clear_on_connected_summary"
-            android:defaultValue="false" android:dependency="enabled" />
-        <CheckBoxPreference android:key="clear_on_disabled"
-            android:title="@string/pref_clear_on_disabled_title"
+            android:title="@string/pref_clear_on_connected_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="enabled"
+            android:key="clear_on_disabled"
             android:summary="@string/pref_clear_on_disabled_summary"
-            android:defaultValue="false" android:dependency="enabled" />
-        <CheckBoxPreference android:key="clear_on_scanning"
-            android:title="@string/pref_clear_on_scanning_title"
+            android:title="@string/pref_clear_on_disabled_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="enabled"
+            android:key="clear_on_scanning"
             android:summary="@string/pref_clear_on_scanning_summary"
-            android:defaultValue="false" android:dependency="enabled" />
-        <CheckBoxPreference android:key="show_data_network"
-            android:title="@string/pref_show_data_network_title"
+            android:title="@string/pref_clear_on_scanning_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="enabled"
+            android:key="show_data_network"
             android:summary="@string/pref_show_data_network_summary"
-            android:defaultValue="true" android:dependency="enabled" />
-        <ListPreference android:key="action_on_tap"
-            android:title="@string/pref_action_on_tap_title"
+            android:title="@string/pref_show_data_network_title" />
+
+        <ListPreference
+            android:defaultValue="open_dialog"
+            android:dependency="enabled"
             android:entries="@array/entries_action_on_tap"
             android:entryValues="@array/entryvalues_action_on_tap"
-            android:defaultValue="open_dialog" android:dependency="enabled" />
+            android:key="action_on_tap"
+            android:title="@string/pref_action_on_tap_title" />
     </PreferenceCategory>
+
 </PreferenceScreen>
