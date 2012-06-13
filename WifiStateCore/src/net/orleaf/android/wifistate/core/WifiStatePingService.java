@@ -189,26 +189,30 @@ public class WifiStatePingService extends Service {
         private boolean ping(String target, int timeout) {
             boolean result = false;
 
-            InetAddress inetAddress = null;
-            try {
-                inetAddress = InetAddress.getByName(target);
-            } catch (UnknownHostException e) {
-                Log.e(WifiState.TAG, "name resolution failed: " + target);
-                e.printStackTrace();
-            }
-            if (inetAddress != null) {
+            if (false) {
+                // 事前にアドレスを取得する
+                InetAddress inetAddress = null;
                 try {
-                    String[] cmdLine = new String[] { "ping", "-c", "1", inetAddress.getHostAddress() };
+                    inetAddress = InetAddress.getByName(target);
+                } catch (UnknownHostException e) {
+                    Log.e(WifiState.TAG, "name resolution failed: " + target);
+                    e.printStackTrace();
+                }
+                target = inetAddress.getHostAddress();
+            }
+            if (target != null) {
+                try {
+                    String[] cmdLine = new String[] { "ping", "-c", "1", target };
                     Process process = Runtime.getRuntime().exec(cmdLine);
                     process.waitFor();
                     //String out = readAll(process.getInputStream());
                     //String err = readAll(process.getErrorStream());
                     process.destroy();
                     if (process.exitValue() == 0) {
-                        if (WifiState.DEBUG) Log.d(WifiState.TAG, "ping success: " + inetAddress.getHostAddress());
+                        if (WifiState.DEBUG) Log.d(WifiState.TAG, "ping success: " + target);
                         result = true;
                     } else {
-                        Log.e(WifiState.TAG, "ping failed: " + inetAddress.getHostAddress());
+                        Log.e(WifiState.TAG, "ping failed: " + target);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
