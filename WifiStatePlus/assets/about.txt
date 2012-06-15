@@ -1,11 +1,6 @@
-Copyright 2010-2011 Orange leaf
+Copyright 2010-2012 Orange leaf
 
-[History]
-v1.2
-- Fix for Android 3.0 or later
-v1.1
-- New "Clear on scan" option.
-v1.0.1
-- Bug fix
-v1.0
-- First release
+- Indicate Wi-Fi connection state on status bar.
+- Select and connect to SSID by long tap SSID text. 
+- Enable, disable and toggle Wi-Fi by tap notification.
+- Ping remote host periodically and indicate network reachability.
