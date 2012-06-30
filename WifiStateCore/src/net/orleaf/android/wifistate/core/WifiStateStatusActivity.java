@@ -215,7 +215,7 @@ public class WifiStateStatusActivity extends Activity {
                 } catch (InterruptedException e) {}
                 // これがあるとIS01で固まる
                 //if (!enable) mWifiManager.disconnect();
-                WifiStateControlService.startSerivce(WifiStateStatusActivity.this, action);
+                WifiStateControlService.startService(WifiStateStatusActivity.this, action);
                 return true;
             }
         }.execute();

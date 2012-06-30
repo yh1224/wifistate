@@ -14,16 +14,16 @@ public class WifiStateLaunchReceiver extends BroadcastReceiver {
         String onTap = WifiStatePreferences.getActionOnTap(context);
         if (onTap.equals("toggle_wifi")) {
             if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
-                WifiStateControlService.startSerivce(context, WifiStateControlService.ACTION_WIFI_ENABLE);
+                WifiStateControlService.startService(context, WifiStateControlService.ACTION_WIFI_ENABLE);
             } else {
-                WifiStateControlService.startSerivce(context, WifiStateControlService.ACTION_WIFI_DISABLE);
+                WifiStateControlService.startService(context, WifiStateControlService.ACTION_WIFI_DISABLE);
             }
         } else if (onTap.equals("wifi_settings")) {
             Intent launchIntent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
             launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(launchIntent);
         } else if (onTap.equals("reenable_wifi")) {
-            WifiStateControlService.startSerivce(context, WifiStateControlService.ACTION_WIFI_REENABLE);
+            WifiStateControlService.startService(context, WifiStateControlService.ACTION_WIFI_REENABLE);
         } else {
             Intent launchIntent = new Intent();
             launchIntent.setClassName(context.getPackageName(), context.getPackageName() + ".WifiStateActivity");

@@ -114,7 +114,7 @@ public class WifiStateControlService extends Service {
      * @param ctx
      * @return true:成功 false:失敗
      */
-    public static boolean startSerivce(Context ctx, String action) {
+    public static boolean startService(Context ctx, String action) {
         boolean result;
         Intent intent = new Intent(ctx, WifiStateControlService.class);
         intent.setAction(action);
