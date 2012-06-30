@@ -207,7 +207,7 @@ public class WifiStatePingService extends Service {
                     process.waitFor();
                     //String out = readAll(process.getInputStream());
                     //String err = readAll(process.getErrorStream());
-                    process.destroy();
+                    //process.destroy();
                     if (process.exitValue() == 0) {
                         if (WifiState.DEBUG) Log.d(WifiState.TAG, "ping success: " + target);
                         result = true;
@@ -239,7 +239,7 @@ public class WifiStatePingService extends Service {
         }
     }
 
-    
+
     /**
      * サービス開始
      */
