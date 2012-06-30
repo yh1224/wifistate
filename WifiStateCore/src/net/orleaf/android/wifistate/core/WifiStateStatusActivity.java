@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -43,6 +44,8 @@ public class WifiStateStatusActivity extends Activity {
     private LinearLayout mNetworkLayout;
     private TextView mNetworkNameText;
     private TextView mNetworkStateText;
+
+    private MenuItem mRouterMenu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -121,20 +124,39 @@ public class WifiStateStatusActivity extends Activity {
     /**
      * オプションメニューの生成
      */
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        mRouterMenu = menu.findItem(R.id.menu_router);
+        if (mNetworkStateInfo.getGatewayIpAddress() != null) {
+            mRouterMenu.setVisible(true);
+        } else {
+            mRouterMenu.setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     /**
      * オプションメニューの選択
      */
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_config) {
             Intent intent = new Intent().setClass(this, WifiStatePreferencesActivity.class);
             startActivity(intent);
+        } else if (itemId == R.id.menu_router) {
+            String gatewayAddr = mNetworkStateInfo.getGatewayIpAddress();
+            if (gatewayAddr != null) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + gatewayAddr));
+                startActivity(intent);
+            }
         } else if (itemId == R.id.menu_about) {
             Intent intent = new Intent().setClass(this, AboutActivity.class);
             startActivity(intent);

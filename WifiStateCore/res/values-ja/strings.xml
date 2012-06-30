@@ -56,5 +56,6 @@
     <string name="toggle_wifi">Wi-Fi ON/OFF</string>
     <string name="reenable_wifi">Wi-Fi 再接続</string>
     <string name="open_wifi_settings">Wi-Fi 設定</string>
+    <string name="browse_router">ルータ設定</string>
 
 </resources>

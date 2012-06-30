@@ -59,5 +59,6 @@
     <string name="toggle_wifi">Toggle Wi-Fi</string>
     <string name="reenable_wifi">Reconnect Wi-Fi</string>
     <string name="open_wifi_settings">Wi-Fi settings</string>
+    <string name="browse_router">Router settings</string>
 
 </resources>
