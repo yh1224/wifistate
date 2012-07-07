@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,8 +20,11 @@ public class WifiStateControlService extends Service {
     public static final String ACTION_WIFI_DISABLE = "net.orleaf.android.wifistate.ACTION_WIFI_DISABLE";
     public static final String ACTION_WIFI_REENABLE = "net.orleaf.android.wifistate.ACTION_WIFI_REENABLE";
 
+    private static final String EXTRA_SLEEP = "sleep";
+
     private WifiManager mWifiManager;
     private BroadcastReceiver mReenableReceiver;
+    private Handler mHandler = new Handler();
 
     @Override
     public void onCreate() {
@@ -39,7 +43,8 @@ public class WifiStateControlService extends Service {
             } else if (intent.getAction().equals(ACTION_WIFI_DISABLE)) {
                 enableWifi(false);
             } else if (intent.getAction().equals(ACTION_WIFI_REENABLE)) {
-                reenableWifi();
+                int sleep = intent.getIntExtra(EXTRA_SLEEP, 0);
+                reenableWifi(sleep);
             }
         }
     }
@@ -74,7 +79,7 @@ public class WifiStateControlService extends Service {
     /**
      * Wi-Fi 再有効化
      */
-    private void reenableWifi() {
+    private void reenableWifi(final int sleep) {
         if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
             enableWifi(true);
         } else {
@@ -86,8 +91,16 @@ public class WifiStateControlService extends Service {
                 mReenableReceiver = new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
-                        if (intent.getIntExtra("wifi_state", -1) == WifiManager.WIFI_STATE_DISABLED) {
-                            enableWifi(true);
+                        int state = intent.getIntExtra("wifi_state", -1);
+                        if (state == WifiManager.WIFI_STATE_DISABLED) {
+                            if (WifiState.DEBUG) Log.d(WifiState.TAG, "Wi-Fi enable after " + sleep + " min.");
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    enableWifi(true);
+                                }}, sleep * 60 * 1000);
+                        } else if (state == WifiManager.WIFI_STATE_ENABLED) {
+                            cancelReenable();
                         }
                     }
                 };
@@ -112,12 +125,15 @@ public class WifiStateControlService extends Service {
      * Wi-Fi 再有効化処理開始
      *
      * @param ctx
+     * @param action ACTION_WIFI_ENABLE / ACTION_WIFI_DISABLE / ACTION_WIFI_REENABLE
+     * @param sleep 有効化までの待ち時間(ACTION_WIFI_REENABLE指定時のみ)
      * @return true:成功 false:失敗
      */
-    public static boolean startService(Context ctx, String action) {
+    public static boolean startService(Context ctx, String action, int sleep) {
         boolean result;
         Intent intent = new Intent(ctx, WifiStateControlService.class);
         intent.setAction(action);
+        intent.putExtra(EXTRA_SLEEP, sleep);
         ComponentName name = ctx.startService(intent);
         if (name == null) {
             Log.e(WifiState.TAG, "WifiStateControlService could not start!");
@@ -127,6 +143,17 @@ public class WifiStateControlService extends Service {
             result = true;
         }
         return result;
+    }
+
+    /**
+     * Wi-Fi 再有効化処理開始
+     *
+     * @param ctx
+     * @param action ACTION_WIFI_ENABLE / ACTION_WIFI_DISABLE / ACTION_WIFI_REENABLE
+     * @return true:成功 false:失敗
+     */
+    public static boolean startService(Context ctx, String action) {
+        return startService(ctx, action, 0);
     }
 
 }

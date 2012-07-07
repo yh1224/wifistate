@@ -38,11 +38,20 @@ public class WifiStatePreferences
     public static final String PREF_PING_TARGET_KEY = "ping_target";
     public static final String PREF_PING_TARGET_DEAFULT = "www.google.com";
 
+    public static final String PREF_PING_TIMEOUT_KEY = "ping_timeout";
+    public static final int PREF_PING_TIMEOUT_DEFAULT = 3;
+
     public static final String PREF_PING_INTERVAL_KEY = "ping_interval";
     public static final int PREF_PING_INTERVAL_DEFAULT = 10;
 
     public static final String PREF_PING_RETRY_KEY = "ping_retry";
     public static final int PREF_PING_RETRY_DEFAULT = 3;
+
+    public static final String PREF_PING_DISABLE_WIFI_ON_FAIL_KEY = "ping_disable_wifi_on_fail";
+    public static final boolean PREF_PING_DISABLE_WIFI_ON_FAIL_DEFAULT = false;
+
+    public static final String PREF_PING_DISABLE_WIFI_PERIOD_KEY = "ping_disable_wifi_period";
+    public static final int PREF_PING_DISABLE_WIFI_PERIOD_DEFAULT = 0;
 
     public static boolean getEnabled(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(
@@ -104,6 +113,12 @@ public class WifiStatePreferences
                 WifiStatePreferences.PREF_PING_TARGET_DEAFULT);
     }
 
+    public static int getPingTimeout(Context ctx) {
+        return PreferenceManager.getDefaultSharedPreferences(ctx).getInt(
+                WifiStatePreferences.PREF_PING_TIMEOUT_KEY,
+                WifiStatePreferences.PREF_PING_TIMEOUT_DEFAULT);
+    }
+
     public static int getPingInterval(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx).getInt(
                 WifiStatePreferences.PREF_PING_INTERVAL_KEY,
@@ -114,6 +129,18 @@ public class WifiStatePreferences
         return PreferenceManager.getDefaultSharedPreferences(ctx).getInt(
                 WifiStatePreferences.PREF_PING_RETRY_KEY,
                 WifiStatePreferences.PREF_PING_RETRY_DEFAULT);
+    }
+
+    public static boolean getPingDisableWifiOnFail(Context ctx) {
+        return PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(
+                WifiStatePreferences.PREF_PING_DISABLE_WIFI_ON_FAIL_KEY,
+                WifiStatePreferences.PREF_PING_DISABLE_WIFI_ON_FAIL_DEFAULT);
+    }
+
+    public static int getPingDisableWifiPeriod(Context ctx) {
+        return PreferenceManager.getDefaultSharedPreferences(ctx).getInt(
+                WifiStatePreferences.PREF_PING_DISABLE_WIFI_PERIOD_KEY,
+                WifiStatePreferences.PREF_PING_DISABLE_WIFI_PERIOD_DEFAULT);
     }
 
 }

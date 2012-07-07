@@ -2,6 +2,8 @@ package net.orleaf.android.wifistate.core;
 
 import java.util.Set;
 
+import net.orleaf.android.wifistate.core.WifiStateControlService;
+
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -24,7 +26,12 @@ public class WifiStateReceiver extends BroadcastReceiver {
     public static final String EXTRA_REACHABLE = "reachable";
     public static final String EXTRA_COUNT_OK = "ok";
     public static final String EXTRA_COUNT_NG = "ng";
+    public static final String EXTRA_COUNT_TOTAL_OK = "total_ok";
+    public static final String EXTRA_COUNT_TOTAL_NG = "total_ng";
     public static final String EXTRA_COUNT_TOTAL = "total";
+
+    public static final String ACTION_PING_FAIL = "net.orleaf.android.wifistate.PING_FAIL";
+    public static final String EXTRA_FAIL = "fail";
 
     private static Context mCtx;
     private static NetworkStateInfo mNetworkStateInfo;
@@ -77,6 +84,15 @@ public class WifiStateReceiver extends BroadcastReceiver {
                         } else {
                             showNotificationIcon(context, R.drawable.state_warn, message);
                         }
+                    }
+                }
+                return;
+            } else if (intent.getAction().equals(ACTION_PING_FAIL)) {
+                if (WifiStatePreferences.getPingDisableWifiOnFail(mCtx)) {
+                    if (mNetworkStateInfo.isWifiConnected()) {
+                        int wait = WifiStatePreferences.getPingDisableWifiPeriod(mCtx);
+                        WifiStateControlService.startService(mCtx,
+                                WifiStateControlService.ACTION_WIFI_REENABLE, wait);
                     }
                 }
                 return;

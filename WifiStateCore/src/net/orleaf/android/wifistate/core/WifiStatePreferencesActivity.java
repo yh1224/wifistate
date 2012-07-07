@@ -15,8 +15,10 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
 {
     private ListPreference mPrefActionOnTap;
     private EditTextPreference mPrefPingTarget;
+    private NumberSeekbarPreference mPrefPingTimeout;
     private NumberSeekbarPreference mPrefPingInterval;
     private NumberSeekbarPreference mPrefPingRetry;
+    private NumberSeekbarPreference mPrefPingDisableWifiPeriod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +31,10 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
 
         mPrefActionOnTap = (ListPreference) findPreference(WifiStatePreferences.PREF_ACTION_ON_TAP_KEY);
         mPrefPingTarget = (EditTextPreference) findPreference(WifiStatePreferences.PREF_PING_TARGET_KEY);
+        mPrefPingTimeout = (NumberSeekbarPreference) findPreference(WifiStatePreferences.PREF_PING_TIMEOUT_KEY);
         mPrefPingInterval = (NumberSeekbarPreference) findPreference(WifiStatePreferences.PREF_PING_INTERVAL_KEY);
         mPrefPingRetry = (NumberSeekbarPreference) findPreference(WifiStatePreferences.PREF_PING_RETRY_KEY);
+        mPrefPingDisableWifiPeriod = (NumberSeekbarPreference) findPreference(WifiStatePreferences.PREF_PING_DISABLE_WIFI_PERIOD_KEY);
 
         updateSummary();
     }
@@ -86,6 +90,9 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
             } else {
                 mPrefPingTarget.setSummary(mPrefPingTarget.getText());
             }
+            mPrefPingTimeout.setSummary(
+                    mPrefPingTimeout.getValue() +
+                    getResources().getString(R.string.pref_ping_timeout_unit));
             mPrefPingInterval.setSummary(
                     mPrefPingInterval.getValue() +
                     getResources().getString(R.string.pref_ping_interval_unit));
@@ -97,6 +104,9 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
                         mPrefPingRetry.getValue() +
                         getResources().getString(R.string.pref_ping_retry_unit));
             }
+            mPrefPingDisableWifiPeriod.setSummary(
+                    mPrefPingDisableWifiPeriod.getValue() +
+                    getResources().getString(R.string.pref_ping_disable_wifi_period_unit));
         }
     }
 

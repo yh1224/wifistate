@@ -265,6 +265,13 @@ public class NetworkStateInfo {
     }
 
     /**
+     * Wi-Fiに接続中かどうか
+     */
+    public boolean isWifiConnected() {
+        return (mState.equals(States.STATE_WIFI_CONNECTED));
+    }
+
+    /**
      * ネットワーク名
      */
     public String getNetworkName() {

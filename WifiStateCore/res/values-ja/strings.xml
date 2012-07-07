@@ -24,11 +24,17 @@
     <string name="pref_ping_on_mobile_summary">モバイルネットワーク接続時も監視をおこないます。</string>
     <string name="pref_ping_target_title">監視先</string>
     <string name="pref_ping_target_default">デフォルトルータ</string>
+    <string name="pref_ping_timeout_title">タイムアウト</string>
+    <string name="pref_ping_timeout_unit">秒</string>
     <string name="pref_ping_interval_title">監視間隔</string>
     <string name="pref_ping_interval_unit">秒</string>
     <string name="pref_ping_retry_title">リトライ回数</string>
     <string name="pref_ping_retry_unit">回</string>
     <string name="pref_ping_retry_zero">リトライしない</string>
+    <string name="pref_ping_disable_wifi_on_fail_title">失敗時にWi-Fi無効化</string>
+    <string name="pref_ping_disable_wifi_on_fail_summary">リトライ回数に達しても疎通しない場合にWi-Fiを無効化します。</string>
+    <string name="pref_ping_disable_wifi_period_title">Wi-Fi無効化時間</string>
+    <string name="pref_ping_disable_wifi_period_unit">分</string>
     <string name="state_enabling">Wi-Fi有効化中</string>
     <string name="state_enabled">Wi-Fi有効</string>
     <string name="state_scanning">スキャン中</string>

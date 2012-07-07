@@ -66,13 +66,13 @@
             android:title="@string/pref_ping_target_title" />
 
         <net.orleaf.android.wifistate.core.NumberSeekbarPreference
-            maxValue="60"
-            minValue="10"
-            unit="@string/pref_ping_interval_unit"
-            android:defaultValue="10"
+            maxValue="10"
+            minValue="1"
+            unit="@string/pref_ping_timeout_unit"
+            android:defaultValue="3"
             android:dependency="ping"
-            android:key="ping_interval"
-            android:title="@string/pref_ping_interval_title" />
+            android:key="ping_timeout"
+            android:title="@string/pref_ping_timeout_title" />
         <net.orleaf.android.wifistate.core.NumberSeekbarPreference
             maxValue="10"
             unit="@string/pref_ping_retry_unit"
@@ -81,6 +81,29 @@
             android:dependency="ping"
             android:key="ping_retry"
             android:title="@string/pref_ping_retry_title" />
+        <net.orleaf.android.wifistate.core.NumberSeekbarPreference
+            maxValue="60"
+            minValue="10"
+            unit="@string/pref_ping_interval_unit"
+            android:defaultValue="10"
+            android:dependency="ping"
+            android:key="ping_interval"
+            android:title="@string/pref_ping_interval_title" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="ping"
+            android:key="ping_disable_wifi_on_fail"
+            android:summary="@string/pref_ping_disable_wifi_on_fail_summary"
+            android:title="@string/pref_ping_disable_wifi_on_fail_title" />
+
+        <net.orleaf.android.wifistate.core.NumberSeekbarPreference
+            maxValue="10"
+            unit="@string/pref_ping_disable_wifi_period_unit"
+            android:defaultValue="3"
+            android:dependency="ping_disable_wifi_on_fail"
+            android:key="ping_disable_wifi_period"
+            android:title="@string/pref_ping_disable_wifi_period_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

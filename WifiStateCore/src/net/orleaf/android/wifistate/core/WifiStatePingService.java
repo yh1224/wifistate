@@ -26,6 +26,7 @@ public class WifiStatePingService extends Service {
     private static final boolean TESTMODE = false;
 
     private static ComponentName mService;
+    private static int mNumFail;
 
     private boolean mReachable;
     private String mTarget;
@@ -91,6 +92,7 @@ public class WifiStatePingService extends Service {
             mNumPing = 0;
             mNumOk = 0;
             mNumNg = 0;
+            mNumFail = 0;
             startThread();
         } else {
             stopThread();
@@ -127,6 +129,16 @@ public class WifiStatePingService extends Service {
         sendBroadcast(intent);
     }
 
+    /**
+     * 失敗通知
+     */
+    private void notifyFail(int fail) {
+        Intent intent = new Intent(this, WifiStateReceiver.class);
+        intent.setAction(WifiStateReceiver.ACTION_PING_FAIL);
+        intent.putExtra(WifiStateReceiver.EXTRA_FAIL, fail);
+        sendBroadcast(intent);
+    }
+
     public void onDestroy() {
         stopThread();
 
@@ -149,7 +161,9 @@ public class WifiStatePingService extends Service {
 
                 boolean reachable = false;
                 int ntry = WifiStatePreferences.getPingRetry(WifiStatePingService.this) + 1;
-                for (int i = 0; i < ntry; i++) {
+                int timeout = WifiStatePreferences.getPingTimeout(WifiStatePingService.this);
+                int count;
+                for (count = 0; count < ntry; count++) {
                     mNumPing++;
                     if (TESTMODE) {
                         try {
@@ -159,7 +173,7 @@ public class WifiStatePingService extends Service {
                         }
                         reachable = !mReachable;
                     } else {
-                        reachable = ping(mTarget, 1000);
+                        reachable = ping(mTarget, timeout);
                     }
                     if (reachable) {
                         mNumOk++;
@@ -173,6 +187,13 @@ public class WifiStatePingService extends Service {
                     if (reachable) {
                         break;
                     }
+                }
+                if (count == ntry) {
+                    // リトライオーバー
+                    mNumFail++;
+                    notifyFail(mNumFail);
+                } else {
+                    mNumFail = 0;
                 }
                 try {
                     Thread.sleep(WifiStatePreferences.getPingInterval(WifiStatePingService.this) * 1000);
@@ -202,7 +223,7 @@ public class WifiStatePingService extends Service {
             }
             if (target != null) {
                 try {
-                    String[] cmdLine = new String[] { "ping", "-c", "1", target };
+                    String[] cmdLine = new String[] { "ping", "-c", "1", "-w", "" + timeout, target };
                     Process process = Runtime.getRuntime().exec(cmdLine);
                     process.waitFor();
                     //String out = readAll(process.getInputStream());

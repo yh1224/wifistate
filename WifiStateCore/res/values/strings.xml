@@ -27,11 +27,17 @@
     <string name="pref_ping_on_mobile_summary">Also check on mobile network.</string>
     <string name="pref_ping_target_title">Target host</string>
     <string name="pref_ping_target_default">Default router</string>
+    <string name="pref_ping_timeout_title">Timeout</string>
+    <string name="pref_ping_timeout_unit">sec.</string>
     <string name="pref_ping_interval_title">Interval</string>
     <string name="pref_ping_interval_unit">sec.</string>
     <string name="pref_ping_retry_title">Retry count</string>
     <string name="pref_ping_retry_unit"></string>
     <string name="pref_ping_retry_zero">No retry</string>
+    <string name="pref_ping_disable_wifi_on_fail_title">Disable Wi-Fi on failure</string>
+    <string name="pref_ping_disable_wifi_on_fail_summary">Disable Wi-Fi when retry over.</string>
+    <string name="pref_ping_disable_wifi_period_title">Disable Wi-Fi period</string>
+    <string name="pref_ping_disable_wifi_period_unit">min.</string>
     <string name="state_enabling">Enabling Wi-Fi</string>
     <string name="state_enabled">Wi-Fi enabled</string>
     <string name="state_scanning">Scanning</string>
