@@ -21,6 +21,7 @@ public class WifiStateActivity extends Activity {
         } else {
             finish();
         }
+        WifiStateReceiver.startNotification(this);
     }
 
     @Override

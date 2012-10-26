@@ -1,6 +1,5 @@
 package net.orleaf.android.wifistate.core;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -49,7 +48,7 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
     protected void onPause() {
         super.onPause();
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-        updateService();
+        WifiStateReceiver.startNotification(this);
     }
 
     @Override
@@ -107,14 +106,6 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
             mPrefPingDisableWifiPeriod.setSummary(
                     mPrefPingDisableWifiPeriod.getValue() +
                     getResources().getString(R.string.pref_ping_disable_wifi_period_unit));
-        }
-    }
-
-    private void updateService() {
-        WifiStateReceiver.clearNotificationIcon(this);
-        if (WifiStatePreferences.getEnabled(this)) {
-            Intent intent = new Intent().setClass(this, WifiStateReceiver.class);
-            sendBroadcast(intent);
         }
     }
 

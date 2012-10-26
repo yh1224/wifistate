@@ -99,7 +99,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
             } else if (intent.getAction().equals(ACTION_CLEAR_NOTIFICATION)) {
                 // 状態が変わっているかもしれないので再度チェックして消去可能なら消去
                 if (mNetworkStateInfo.isClearableState()) {
-                    clearNotificationIcon(mCtx);
+                    clearNotification(mCtx);
                     return;
                 }
             }
@@ -214,7 +214,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
     /**
      * ノーティフィケーションバーのアイコンを消去
      */
-    public static void clearNotificationIcon(Context ctx) {
+    public static void clearNotification(Context ctx) {
         NotificationManager notificationManager =
             (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATIONID_ICON);
@@ -235,6 +235,16 @@ public class WifiStateReceiver extends BroadcastReceiver {
                 }
             }
         }
+    }
+
+    public static void startNotification(Context ctx) {
+        if (WifiStatePreferences.getEnabled(ctx)) {
+            Intent intent = new Intent().setClass(ctx, WifiStateReceiver.class);
+            ctx.sendBroadcast(intent);
+        } else {
+            clearNotification(ctx);
+        }
+        disable(ctx);
     }
 
 }
