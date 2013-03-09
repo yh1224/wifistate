@@ -1,4 +1,4 @@
-Copyright 2010-2012 Orange leaf
+Copyright 2010-2013 Orange leaf
 
 - Indicate Wi-Fi connection state on status bar.
 - Select and connect to SSID by long tap SSID text. 
