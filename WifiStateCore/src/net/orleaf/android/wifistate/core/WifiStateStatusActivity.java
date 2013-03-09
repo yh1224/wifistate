@@ -170,6 +170,9 @@ public class WifiStateStatusActivity extends Activity {
         // SSID一覧
         if (mNetworkList == null) {
             mNetworkList = mWifiManager.getConfiguredNetworks();
+            if (mNetworkList == null) { // 取得失敗
+                return;
+            }
         }
         for (int i = 0; i < mNetworkList.size(); i++) {
             WifiConfiguration config = mNetworkList.get(i);
