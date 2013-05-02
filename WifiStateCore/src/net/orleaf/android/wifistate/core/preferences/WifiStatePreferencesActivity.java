@@ -1,10 +1,14 @@
-package net.orleaf.android.wifistate.core;
+package net.orleaf.android.wifistate.core.preferences;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
+
+import net.orleaf.android.wifistate.core.R;
+import net.orleaf.android.wifistate.core.WifiState;
+import net.orleaf.android.wifistate.core.WifiStateReceiver;
 
 /**
  * 設定画面

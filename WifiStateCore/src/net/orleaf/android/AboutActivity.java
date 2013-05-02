@@ -2,8 +2,6 @@ package net.orleaf.android;
 
 import java.io.IOException;
 
-import net.orleaf.android.wifistate.core.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -14,6 +12,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+
+import net.orleaf.android.wifistate.core.R;
 
 public class AboutActivity extends Activity
 {
@@ -27,8 +27,13 @@ public class AboutActivity extends Activity
 
         setContentView(R.layout.about);
 
+        Intent intent = getIntent();
+        mTitle = intent.getStringExtra("title");
+
         // タイトル
-        mTitle = getResources().getString(R.string.app_name);
+        if (mTitle == null) {
+            mTitle = getResources().getString(R.string.app_name);
+        }
         try {
             PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
             mTitle += " ver." + pi.versionName;
@@ -38,13 +43,20 @@ public class AboutActivity extends Activity
         getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
                 R.drawable.icon);
 
-        // テキスト
-        AssetsReader ar = new AssetsReader(this);
-        try {
-            String str = ar.getText("about.txt");
-            TextView text = (TextView) findViewById(R.id.text);
-            text.setText(str);
-        } catch (IOException e) {}
+        String bodyText = intent.getStringExtra("body");
+        String bodyAsset = intent.getStringExtra("body_asset");
+
+        TextView text = (TextView) findViewById(R.id.text);
+        if (bodyText != null) {
+            text.setText(bodyText);
+        } else if (bodyAsset != null) {
+            // assetによる指定
+            AssetsReader ar = new AssetsReader(this);
+            try {
+                String str = ar.getText(bodyAsset);
+                text.setText(str);
+            } catch (IOException e) {}
+        }
 
         // OK
         Button btn_ok = (Button) findViewById(R.id.ok);
@@ -57,13 +69,12 @@ public class AboutActivity extends Activity
         });
 
         // Feedback
-        Button btn_feedback = (Button) findViewById(R.id.feedback);
+        Button btn_feedback = (Button) findViewById(R.id.support);
         btn_feedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(
-                        "mailto:" + getResources().getString(R.string.feedback_to)));
-                intent.putExtra(Intent.EXTRA_SUBJECT, mTitle);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(
+                        getString(R.string.support_url)));
                 startActivity(intent);
             }
         });

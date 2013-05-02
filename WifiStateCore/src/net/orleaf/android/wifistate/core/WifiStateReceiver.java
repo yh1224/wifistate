@@ -2,8 +2,6 @@ package net.orleaf.android.wifistate.core;
 
 import java.util.Set;
 
-import net.orleaf.android.wifistate.core.WifiStateControlService;
-
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -17,6 +15,9 @@ import android.os.SystemClock;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import net.orleaf.android.wifistate.core.WifiStateControlService;
+import net.orleaf.android.wifistate.core.preferences.WifiStatePreferences;
 
 public class WifiStateReceiver extends BroadcastReceiver {
     private static final int NOTIFICATIONID_ICON = 1;
@@ -33,42 +34,50 @@ public class WifiStateReceiver extends BroadcastReceiver {
     public static final String ACTION_PING_FAIL = "net.orleaf.android.wifistate.PING_FAIL";
     public static final String EXTRA_FAIL = "fail";
 
-    private static Context mCtx;
-    private static NetworkStateInfo mNetworkStateInfo;
-    private static MyPhoneStateListener mPhoneStateListener;
-    private static TelephonyManager mTelManager;
+    private static NetworkStateInfo mNetworkStateInfo = null;
+    private static PhoneStateListener mPhoneStateListener = null;
     private static boolean mReachable;
 
+    /**
+     * ネットワーク状態の変化によって通知アイコンを切り替える
+     */
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context ctx, Intent intent) {
         if (WifiState.DEBUG) logIntent(intent);
-        mCtx = context;
 
-        if (!WifiStatePreferences.getEnabled(mCtx)) {
+        if (!WifiStatePreferences.getEnabled(ctx)) {
             return;
         }
 
-        if (mTelManager == null) {
-            mTelManager = (TelephonyManager) mCtx.getSystemService(Context.TELEPHONY_SERVICE);
-        }
+        // ネットワーク状態を取得
         if (mNetworkStateInfo == null) {
-            mNetworkStateInfo = new NetworkStateInfo(mCtx);
+            mNetworkStateInfo = new NetworkStateInfo(ctx);
         }
-        if (mPhoneStateListener == null) {
-            if (WifiStatePreferences.getShowDataNetwork(mCtx)) {
-                // 3G状態リスナ登録
-                mPhoneStateListener = new MyPhoneStateListener();
-                mTelManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_DATA_CONNECTION_STATE);
-            }
+        if (mPhoneStateListener == null && WifiStatePreferences.getShowDataNetwork(ctx)) {
+            // 3G接続状態の監視を開始
+            mPhoneStateListener = new PhoneStateListener() {
+                @Override
+                public void onDataConnectionStateChanged(int state) {
+                    super.onDataConnectionStateChanged(state);
+                    if (mNetworkStateInfo != null) {
+                        updateState(ctx);
+                    }
+                }
+            };
+            TelephonyManager tm = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
+            tm.listen(mPhoneStateListener, PhoneStateListener.LISTEN_DATA_CONNECTION_STATE);
         }
 
         if (intent.getAction() != null) {
             if (intent.getAction().equals("android.intent.action.PACKAGE_REPLACED"/*Intent.ACTION_PACKAGE_REPLACED*/)) {
                 if (intent.getData() == null ||
-                    !intent.getData().equals(Uri.fromParts("package", mCtx.getPackageName(), null))) {
+                    !intent.getData().equals(Uri.fromParts("package", ctx.getPackageName(), null))) {
                     return;
                 }
             } else if (intent.getAction().equals(ACTION_REACHABILITY)) {
+                /*
+                 * ネットワーク疎通監視結果通知 (ping毎に通知)
+                 */
                 if (mNetworkStateInfo.isConnected()) {  // 接続中のみ
                     boolean reachable = intent.getBooleanExtra(EXTRA_REACHABLE, true);
                     if (reachable != mReachable) {
@@ -80,70 +89,65 @@ public class WifiStateReceiver extends BroadcastReceiver {
                             message += " ping:" + ok + "/" + total;
                         }
                         if (mReachable) {
-                            showNotificationIcon(context, mNetworkStateInfo.getIcon(), message);
+                            showNotificationIcon(ctx, mNetworkStateInfo.getIcon(), message);
                         } else {
-                            showNotificationIcon(context, R.drawable.state_warn, message);
+                            showNotificationIcon(ctx, R.drawable.state_warn, message);
                         }
                     }
                 }
                 return;
             } else if (intent.getAction().equals(ACTION_PING_FAIL)) {
-                if (WifiStatePreferences.getPingDisableWifiOnFail(mCtx)) {
+                /*
+                 * ネットワーク疎通監視失敗 (指定回数連続失敗時)
+                 */
+                if (WifiStatePreferences.getPingDisableWifiOnFail(ctx)) {
                     if (mNetworkStateInfo.isWifiConnected()) {
-                        int wait = WifiStatePreferences.getPingDisableWifiPeriod(mCtx);
-                        WifiStateControlService.startService(mCtx,
+                        int wait = WifiStatePreferences.getPingDisableWifiPeriod(ctx);
+                        WifiStateControlService.startService(ctx,
                                 WifiStateControlService.ACTION_WIFI_REENABLE, wait);
                     }
                 }
                 return;
             } else if (intent.getAction().equals(ACTION_CLEAR_NOTIFICATION)) {
+                /*
+                 * 通知アイコン消去タイマ満了
+                 */
                 // 状態が変わっているかもしれないので再度チェックして消去可能なら消去
                 if (mNetworkStateInfo.isClearableState()) {
-                    clearNotification(mCtx);
+                    clearNotification(ctx);
                     return;
                 }
             }
         }
 
-        updateState(mCtx);
+        updateState(ctx);
     }
 
     /**
-     * 3G状態監視
-     */
-    private class MyPhoneStateListener extends PhoneStateListener {
-        @Override
-        public void onDataConnectionStateChanged(int state) {
-            super.onDataConnectionStateChanged(state);
-            if (mNetworkStateInfo != null) {
-                updateState(mCtx);
-            }
-        }
-    };
-
-    /**
-     * 通知の更新
-     *
-     * @param ctx
+     * ネットワーク状態情報の更新、および通知アイコンの反映
      */
     private void updateState(Context ctx) {
         if (mNetworkStateInfo.update()) {
+            // 状態が変化したら通知アイコンを更新
             showNotificationIcon(ctx, mNetworkStateInfo.getIcon(), mNetworkStateInfo.getStateMessage());
-            if (!WifiState.isLiteVersion(ctx) && WifiStatePreferences.getPing(ctx)) {
-                if (mNetworkStateInfo.getState().equals(NetworkStateInfo.States.STATE_WIFI_CONNECTED) ||
-                        (mNetworkStateInfo.getState().equals(NetworkStateInfo.States.STATE_MOBILE_CONNECTED) &&
-                                WifiStatePreferences.getPingOnMobile(ctx) == true)) {
+            if (!WifiState.isLiteVersion(ctx)) {
+                if (WifiStatePreferences.getPing(ctx) &&
+                        (mNetworkStateInfo.getState().equals(NetworkStateInfo.States.STATE_WIFI_CONNECTED) ||
+                                (mNetworkStateInfo.getState().equals(NetworkStateInfo.States.STATE_MOBILE_CONNECTED) &&
+                                        WifiStatePreferences.getPingOnMobile(ctx) == true))) {
+                    // ネットワーク疎通監視サービス開始
                     mReachable = true;
                     WifiStatePingService.startService(ctx, mNetworkStateInfo.getGatewayIpAddress());
                 } else {
+                    // ネットワーク疎通監視サービス停止
                     WifiStatePingService.stopService(ctx);
                 }
             }
             if (mNetworkStateInfo.isClearableState()) {
-                // 3秒後に消去
+                // 3秒後に消去するタイマ
                 long next = SystemClock.elapsedRealtime() + 3000;
-                Intent clearIntent = new Intent(mCtx, WifiStateReceiver.class).setAction(ACTION_CLEAR_NOTIFICATION);
-                AlarmManager alarmManager = (AlarmManager) mCtx.getSystemService(Context.ALARM_SERVICE);
+                Intent clearIntent = new Intent(ctx, WifiStateReceiver.class).setAction(ACTION_CLEAR_NOTIFICATION);
+                AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
                 alarmManager.set(AlarmManager.ELAPSED_REALTIME, next, PendingIntent.getBroadcast(ctx, 0, clearIntent, 0));
             }
         }
@@ -156,14 +160,17 @@ public class WifiStateReceiver extends BroadcastReceiver {
      */
     public static void disable(Context ctx) {
         if (mPhoneStateListener != null) {
-            mTelManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
+            // 3G接続状態の監視を停止
+            TelephonyManager tm = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
+            tm.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
             mPhoneStateListener = null;
         }
+        // ネットワーク状態情報を破棄
         mNetworkStateInfo = null;
     }
 
     /**
-     * ステータスバーにアイコンを表示
+     * ステータスバーに通知アイコンをすべて表示 (テスト用)
      */
     public static void testNotificationIcon(Context ctx) {
         int[] icons = {
@@ -193,9 +200,13 @@ public class WifiStateReceiver extends BroadcastReceiver {
     }
 
     /**
-     * ステータスバーにアイコンを表示
+     * ステータスバーに通知アイコンを表示
+     *
+     * @param ctx
+     * @param iconRes 表示するアイコンのリソースID
+     * @param message 表示するメッセージ
      */
-    public static void showNotificationIcon(Context ctx, int iconRes, String notify_text) {
+    public static void showNotificationIcon(Context ctx, int iconRes, String message) {
         NotificationManager notificationManager = (NotificationManager)
                 ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification = new Notification(iconRes,
@@ -203,7 +214,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
         Intent intent = new Intent(ctx, WifiStateLaunchReceiver.class);
         PendingIntent contentIntent = PendingIntent.getBroadcast(ctx, 0, intent, 0);
         notification.setLatestEventInfo(ctx, ctx.getResources().getString(R.string.app_name),
-                notify_text, contentIntent);
+                message, contentIntent);
         notification.flags = 0;
         if (!WifiStatePreferences.getClearable(ctx)) {
             notification.flags |= (Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR);
@@ -212,7 +223,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
     }
 
     /**
-     * ノーティフィケーションバーのアイコンを消去
+     * ステータスバーの通知アイコンを消去
      */
     public static void clearNotification(Context ctx) {
         NotificationManager notificationManager =
@@ -221,6 +232,9 @@ public class WifiStateReceiver extends BroadcastReceiver {
         disable(ctx);
     }
 
+    /**
+     * インテントのログ採取
+     */
     private static void logIntent(Intent intent) {
         Log.d(WifiState.TAG, "received intent: " + intent.getAction());
 
@@ -237,11 +251,17 @@ public class WifiStateReceiver extends BroadcastReceiver {
         }
     }
 
+    /**
+     * ネットワーク状態の通知を開始/再開
+     * 設定を変更した場合などに、明示的に表示を更新したいときに呼ぶ。
+     */
     public static void startNotification(Context ctx) {
         if (WifiStatePreferences.getEnabled(ctx)) {
+            // 空インテントを投げて強制的に更新
             Intent intent = new Intent().setClass(ctx, WifiStateReceiver.class);
             ctx.sendBroadcast(intent);
         } else {
+            // 無効に設定された場合は消去
             clearNotification(ctx);
         }
         disable(ctx);

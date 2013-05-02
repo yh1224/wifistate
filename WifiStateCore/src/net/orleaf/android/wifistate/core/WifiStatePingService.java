@@ -17,8 +17,10 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
 
+import net.orleaf.android.wifistate.core.preferences.WifiStatePreferences;
+
 /**
- * サービス
+ * ネットワーク疎通監視サービス
  */
 public class WifiStatePingService extends Service {
     public static final String EXTRA_TARGET = "target";
@@ -26,29 +28,31 @@ public class WifiStatePingService extends Service {
     private static final boolean TESTMODE = false;
 
     private static ComponentName mService;
-    private static int mNumFail;
-
-    private boolean mReachable;
-    private String mTarget;
-    private Thread mThread = null;
-    private int mNumPing;
-    private int mNumOk;
-    private int mNumNg;
 
     private BroadcastReceiver mScreenReceiver;
+
+    private boolean mReachable;     // 直前の到達性
+    private String mTarget;         // 疎通監視先ホスト
+    private Thread mThread = null;  // 処理スレッド
+    private int mNumPing;           // ping実行回数(累計)
+    private int mNumOk;             // ping成功回数(累計)
+    private int mNumNg;             // ping失敗回数(累計)
+    private int mNumFail;           // ping連続失敗回数
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        // ACTION_SCREEN_ON レシーバの登録
+        // 画面ON/OFF監視
         mScreenReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (WifiState.DEBUG) Log.d(WifiState.TAG, "received intent: " + intent.getAction());
                 if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-                    start();
+                    // 画面ONで開始
+                    startPing();
                 } if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                    // 画面OFFで停止
                     stopThread();
                 }
             }
@@ -57,44 +61,48 @@ public class WifiStatePingService extends Service {
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(mScreenReceiver, filter);
-
-        // 画面ONなら監視開始
-        boolean screenOn = true;
-        try {
-	        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            screenOn = (Boolean) PowerManager.class.getMethod("isScreenOn").invoke(pm);
-        } catch (Exception e) {}
-        if (screenOn) {
-            start();
-        }
     }
 
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
 
+        // 監視先ホスト取得
         String target = WifiStatePreferences.getPingTarget(this);
-        mReachable = true;
-        if (target == null || target.equals("")) {
-            mTarget = intent.getStringExtra(EXTRA_TARGET);
-        } else {
+        if (target != null && target.length() > 0) {
             mTarget = target;
+        } else {
+            // 監視先未設定の場合は指定されたホスト(ゲートウェイ)を使用する
+            mTarget = intent.getStringExtra(EXTRA_TARGET);
         }
-        start();
+
+        // 画面ONなら監視開始
+        boolean screenOn = true;
+        try {
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            screenOn = (Boolean) PowerManager.class.getMethod("isScreenOn").invoke(pm);
+        } catch (Exception e) {
+            // 分からない場合はONとみなす。
+        }
+        if (screenOn) {
+            startPing();
+        }
     }
 
     /**
      * 監視開始
      */
-    private void start() {
+    private void startPing() {
         if (WifiState.DEBUG) Log.d(WifiState.TAG, "Target: " + mTarget);
         if (mTarget != null) {
+            mReachable = true;
             mNumPing = 0;
             mNumOk = 0;
             mNumNg = 0;
             mNumFail = 0;
             startThread();
         } else {
+            // ターゲット未設定の場合は停止
             stopThread();
         }
     }
@@ -107,17 +115,18 @@ public class WifiStatePingService extends Service {
             mThread = new PingThread();
             mThread.start();
         }
+        // スレッド起動済みの場合は何もしない。
     }
 
     /**
-     * 監視停止
+     * 監視スレッド停止
      */
     private void stopThread() {
         mThread = null;
     }
 
     /**
-     * 到達性通知
+     * ネットワーク疎通監視結果通知
      */
     private void notifyReachability(boolean reachable) {
         Intent intent = new Intent(this, WifiStateReceiver.class);
@@ -130,7 +139,9 @@ public class WifiStatePingService extends Service {
     }
 
     /**
-     * 失敗通知
+     * ネットワーク疎通監視失敗通知
+     *
+     * @param fail 連続失敗回数
      */
     private void notifyFail(int fail) {
         Intent intent = new Intent(this, WifiStateReceiver.class);
@@ -142,8 +153,10 @@ public class WifiStatePingService extends Service {
     public void onDestroy() {
         stopThread();
 
-        // レシーバ解除
-        unregisterReceiver(mScreenReceiver);
+        // 画面ON/OFF監視停止
+        if (mScreenReceiver != null) {
+            unregisterReceiver(mScreenReceiver);
+        }
     }
 
     @Override
@@ -151,7 +164,9 @@ public class WifiStatePingService extends Service {
         return null;
     }
 
-
+    /**
+     * ネットワーク疎通監視処理スレッド
+     */
     private class PingThread extends Thread {
         @Override
         public void run() {
@@ -193,6 +208,7 @@ public class WifiStatePingService extends Service {
                     mNumFail++;
                     notifyFail(mNumFail);
                 } else {
+                    // 成功したら失敗回数をリセット
                     mNumFail = 0;
                 }
                 try {
@@ -245,7 +261,7 @@ public class WifiStatePingService extends Service {
         }
 
         /**
-         * 結果を取得する
+         * コマンド実行結果を取得する
          */
         @SuppressWarnings("unused")
         private String readAll(InputStream stream) throws IOException {
@@ -262,7 +278,10 @@ public class WifiStatePingService extends Service {
 
 
     /**
-     * サービス開始
+     * ネットワーク疎通監視サービス開始
+     *
+     * @param ctx
+     * @param target 監視先ホスト
      */
     public static boolean startService(Context ctx, String target) {
         boolean result;
@@ -281,7 +300,7 @@ public class WifiStatePingService extends Service {
     }
 
     /**
-     * サービス停止
+     * ネットワーク疎通監視サービス停止
      */
     public static void stopService(Context ctx) {
         if (mService != null) {

@@ -7,8 +7,8 @@
     <string name="preferences_notification">State indication</string>
     <string name="preferences_ping">Health indication</string>
     <string name="about">About</string>
-    <string name="feedback">Feedback</string>
-    <string name="feedback_to">yh1224%2Borange@gmail.com</string>
+    <string name="support">Support</string>
+    <string name="support_url">http://orleaf.net</string>
     <string name="pref_enable_title">Enable</string>
     <string name="pref_clearable_title">Clearable</string>
     <string name="pref_clearable_summary">Enable to clear manually.</string>
@@ -56,9 +56,9 @@
     <string name="wifi">Wi-Fi</string>
     <string name="wifi_reenable">Reconnect</string>
     <string name="wifi_settings">Wi-Fi settings</string>
-    <string name="checking_status">Checking status...</string>
-    <string name="enabling_wifi">Enabling Wi-Fi...</string>
-    <string name="disabling_wifi">Disabling Wi-Fi...</string>
+    <string name="checking_status">Checking status&#8230;</string>
+    <string name="enabling_wifi">Enabling Wi-Fi&#8230;</string>
+    <string name="disabling_wifi">Disabling Wi-Fi&#8230;</string>
     <string name="press_menu_to_config">Press MENU to configure application settings.</string>
     <string name="connect_to">Connect to</string>
     <string name="open_dialog">Open Dialog</string>

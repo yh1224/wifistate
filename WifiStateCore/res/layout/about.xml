@@ -11,7 +11,7 @@
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="9"
         android:scrollbarStyle="outsideInset" >
 
@@ -24,7 +24,7 @@
                 android:id="@+id/text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10px" />
+                android:layout_margin="10dp" />
         </LinearLayout>
     </ScrollView>
 
@@ -32,18 +32,17 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="1"
         android:background="#ccc"
         android:orientation="horizontal"
-        android:padding="4px" >
+        android:padding="4dp" >
 
         <Button
-            android:id="@+id/feedback"
+            android:id="@+id/support"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:text="@string/feedback" />
+            android:text="@string/support" />
 
         <Button
             android:id="@+id/ok"

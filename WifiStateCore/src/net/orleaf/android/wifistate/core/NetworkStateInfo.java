@@ -11,8 +11,10 @@ import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-public class NetworkStateInfo {
+import net.orleaf.android.wifistate.core.preferences.WifiStatePreferences;
 
+
+public class NetworkStateInfo {
     enum States {
         STATE_DISABLED,
         STATE_WIFI_1,           // no use
@@ -27,16 +29,10 @@ public class NetworkStateInfo {
         STATE_MOBILE_CONNECTED
     };
 
-    private Context mCtx;
+    private final Context mCtx;
     private String mNetworkName;
     private States mState = States.STATE_DISABLED;
-    private States mMobileState = States.STATE_DISABLED;
     private String mStateDetail = null;
-
-    // Managers
-    private WifiManager mWifiManager;
-    private ConnectivityManager mConnManager;
-    private TelephonyManager mTelManager;
 
     // Wi-Fi state
     private int mWifiState = 0;
@@ -55,35 +51,36 @@ public class NetworkStateInfo {
      */
     public NetworkStateInfo(Context ctx) {
         mCtx = ctx;
-        mWifiManager = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
-        mConnManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
-        mTelManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
         mState = States.STATE_DISABLED;
         mNetworkName = null;
     }
 
     /**
      * 状態を更新する
-     * 
+     *
      * @return true:変更あり false:変更なし
      */
     public boolean update() {
+        WifiManager wm = (WifiManager) mCtx.getSystemService(Context.WIFI_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) mCtx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        TelephonyManager tm = (TelephonyManager) mCtx.getSystemService(Context.TELEPHONY_SERVICE);
         Resources res = mCtx.getResources();
+
         States newState = mState;
         String newStateDetail = mStateDetail;
 
         // Wi-Fiの状態を取得
-        mWifiState = mWifiManager.getWifiState();
-        WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
+        mWifiState = wm.getWifiState();
+        WifiInfo wifiInfo = wm.getConnectionInfo();
         mSupplicantState = wifiInfo.getSupplicantState();
         if (mSupplicantState != SupplicantState.DISCONNECTED) {
             mSupplicantConnected = true;
         }
-        mWifiNetworkInfo = mConnManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        mWifiNetworkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
         // モバイルネットワークの状態を取得
-        mDataConnectionState = mTelManager.getDataState();
-        mDataNetworkInfo = mConnManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        mDataConnectionState = tm.getDataState();
+        mDataNetworkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
         if (mWifiState == WifiManager.WIFI_STATE_DISABLING ||
                 mWifiState == WifiManager.WIFI_STATE_DISABLED) {
@@ -300,8 +297,10 @@ public class NetworkStateInfo {
      * IPアドレスを取得
      */
     public String getLocalIpAddress() {
+        WifiManager wm = (WifiManager) mCtx.getSystemService(Context.WIFI_SERVICE);
+
         if (mState.equals(States.STATE_WIFI_CONNECTED)) {
-            DhcpInfo dhcpInfo = mWifiManager.getDhcpInfo();
+            DhcpInfo dhcpInfo = wm.getDhcpInfo();
             if (dhcpInfo.ipAddress != 0) {
                 return int2IpAddress(dhcpInfo.ipAddress);
             }
@@ -313,8 +312,10 @@ public class NetworkStateInfo {
      * ゲートウェイアドレスを取得
      */
     public String getGatewayIpAddress() {
+        WifiManager wm = (WifiManager) mCtx.getSystemService(Context.WIFI_SERVICE);
+
         if (mState.equals(States.STATE_WIFI_CONNECTED)) {
-            DhcpInfo dhcpInfo = mWifiManager.getDhcpInfo();
+            DhcpInfo dhcpInfo = wm.getDhcpInfo();
             if (dhcpInfo.gateway != 0) {
                 return int2IpAddress(dhcpInfo.gateway);
             }

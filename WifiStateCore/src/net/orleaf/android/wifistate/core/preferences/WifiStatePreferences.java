@@ -1,4 +1,4 @@
-package net.orleaf.android.wifistate.core;
+package net.orleaf.android.wifistate.core.preferences;
 
 import android.content.Context;
 import android.preference.PreferenceManager;

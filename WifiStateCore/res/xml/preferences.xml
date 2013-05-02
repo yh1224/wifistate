@@ -65,7 +65,7 @@
             android:key="ping_target"
             android:title="@string/pref_ping_target_title" />
 
-        <net.orleaf.android.wifistate.core.NumberSeekbarPreference
+        <net.orleaf.android.wifistate.core.preferences.NumberSeekbarPreference
             maxValue="10"
             minValue="1"
             unit="@string/pref_ping_timeout_unit"
@@ -73,7 +73,7 @@
             android:dependency="ping"
             android:key="ping_timeout"
             android:title="@string/pref_ping_timeout_title" />
-        <net.orleaf.android.wifistate.core.NumberSeekbarPreference
+        <net.orleaf.android.wifistate.core.preferences.NumberSeekbarPreference
             maxValue="10"
             unit="@string/pref_ping_retry_unit"
             zero="@string/pref_ping_retry_zero"
@@ -81,7 +81,7 @@
             android:dependency="ping"
             android:key="ping_retry"
             android:title="@string/pref_ping_retry_title" />
-        <net.orleaf.android.wifistate.core.NumberSeekbarPreference
+        <net.orleaf.android.wifistate.core.preferences.NumberSeekbarPreference
             maxValue="60"
             minValue="10"
             unit="@string/pref_ping_interval_unit"
@@ -97,7 +97,7 @@
             android:summary="@string/pref_ping_disable_wifi_on_fail_summary"
             android:title="@string/pref_ping_disable_wifi_on_fail_title" />
 
-        <net.orleaf.android.wifistate.core.NumberSeekbarPreference
+        <net.orleaf.android.wifistate.core.preferences.NumberSeekbarPreference
             maxValue="10"
             unit="@string/pref_ping_disable_wifi_period_unit"
             android:defaultValue="3"
