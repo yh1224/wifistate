@@ -303,12 +303,7 @@ public class WifiStateStatusActivity extends Activity {
         WifiManager wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
         mNetworkNameText.setText(mNetworkStateInfo.getNetworkName());
-        String detail = mNetworkStateInfo.getDetail();
-        String ip = mNetworkStateInfo.getLocalIpAddress();
-        if (ip != null) {
-            detail += " (" + ip + ")";
-        }
-        mNetworkStateText.setText(detail);
+        mNetworkStateText.setText(mNetworkStateInfo.getDetail());
         if (wm.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
             mWifiToggle.setChecked(false);
             mWifiToggle.setEnabled(true);

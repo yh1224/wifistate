@@ -1,5 +1,10 @@
 package net.orleaf.android.wifistate.core;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
@@ -13,7 +18,9 @@ import android.util.Log;
 
 import net.orleaf.android.wifistate.core.preferences.WifiStatePreferences;
 
-
+/**
+ * ネットワーク接続状態情報
+ */
 public class NetworkStateInfo {
     enum States {
         STATE_DISABLED,
@@ -36,6 +43,7 @@ public class NetworkStateInfo {
 
     // Wi-Fi state
     private int mWifiState = 0;
+    private WifiInfo mWifiInfo = null;
     private boolean mSupplicantConnected = false;
     private SupplicantState mSupplicantState = null;
     private NetworkInfo mWifiNetworkInfo = null;
@@ -71,8 +79,8 @@ public class NetworkStateInfo {
 
         // Wi-Fiの状態を取得
         mWifiState = wm.getWifiState();
-        WifiInfo wifiInfo = wm.getConnectionInfo();
-        mSupplicantState = wifiInfo.getSupplicantState();
+        mWifiInfo = wm.getConnectionInfo();
+        mSupplicantState = mWifiInfo.getSupplicantState();
         if (mSupplicantState != SupplicantState.DISCONNECTED) {
             mSupplicantConnected = true;
         }
@@ -172,9 +180,9 @@ public class NetworkStateInfo {
         mNetworkName = null;
         if (newState.compareTo(States.STATE_WIFI_SCANNING) > 0 && /*スキャン完了済*/
                 newState.compareTo(States.STATE_WIFI_CONNECTED) <= 0 &&
-                wifiInfo != null) {
+                mWifiInfo != null) {
             // SSID
-            mNetworkName = wifiInfo.getSSID();
+            mNetworkName = mWifiInfo.getSSID();
         }
         else if (newState.compareTo(States.STATE_MOBILE_CONNECTING) >= 0) {
             // APN
@@ -269,6 +277,17 @@ public class NetworkStateInfo {
     }
 
     /**
+     * ネットワークタイプ
+     */
+    public String getNetworkType() {
+        if (mState.compareTo(States.STATE_MOBILE_CONNECTING) >= 0) {
+            return "Mobile Data";
+        } else {
+            return "Wi-Fi";
+        }
+    }
+
+    /**
      * ネットワーク名
      */
     public String getNetworkName() {
@@ -276,35 +295,58 @@ public class NetworkStateInfo {
     }
 
     /**
-     * メッセージ
-     */
-    public String getStateMessage() {
-        String message = mStateDetail;
-        if (mNetworkName != null) {
-            message += " (" + mNetworkName + ")";
-        }
-        return message;
-    }
-
-    /**
      * ネットワークの状態を取得
      */
     public String getDetail() {
-        return mStateDetail;
+        String detail = mStateDetail;
+        if (mState == States.STATE_WIFI_CONNECTED || mState == States.STATE_MOBILE_CONNECTED) {
+            String ip = getMyIpAddress();
+            if (ip != null) {
+                detail = "IP:" + ip;
+            }
+        }
+        return detail;
     }
 
     /**
      * IPアドレスを取得
      */
-    public String getLocalIpAddress() {
+    public String getMyIpAddress() {
         WifiManager wm = (WifiManager) mCtx.getSystemService(Context.WIFI_SERVICE);
 
         if (mState.equals(States.STATE_WIFI_CONNECTED)) {
-            DhcpInfo dhcpInfo = wm.getDhcpInfo();
-            if (dhcpInfo.ipAddress != 0) {
-                return int2IpAddress(dhcpInfo.ipAddress);
+            // Wi-Fi情報から取得
+            int address = mWifiInfo.getIpAddress();
+            if (address != 0) {
+                return int2IpAddress(address);
+            }
+
+            // DHCP情報から取得
+            address = wm.getDhcpInfo().ipAddress;
+            if (address != 0) {
+                return int2IpAddress(address);
             }
         }
+
+        // ネットワークインタフェースからいずれかのグローバルアドレスを取得
+        Enumeration<NetworkInterface> interfaces;
+        try {
+            interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface network = interfaces.nextElement();
+                Enumeration<InetAddress> addresses = network.getInetAddresses();
+
+                while (addresses.hasMoreElements()) {
+                    InetAddress address = addresses.nextElement();
+                    if (!(address.isLoopbackAddress() || address.isLinkLocalAddress() || address.isAnyLocalAddress())) {
+                        return address.getHostAddress();
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 

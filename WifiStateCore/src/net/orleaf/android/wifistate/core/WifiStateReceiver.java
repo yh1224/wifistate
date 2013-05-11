@@ -82,17 +82,19 @@ public class WifiStateReceiver extends BroadcastReceiver {
                     boolean reachable = intent.getBooleanExtra(EXTRA_REACHABLE, true);
                     if (reachable != mReachable) {
                         mReachable = reachable;
-                        String message = mNetworkStateInfo.getStateMessage();
+                        int iconRes;
+                        if (mReachable) {
+                            iconRes = mNetworkStateInfo.getIcon();
+                        } else {
+                            iconRes = R.drawable.state_warn;
+                        }
+                        String extra = null;
                         if (WifiState.DEBUG) {
                             int ok = intent.getIntExtra("ok", 0);
                             int total = intent.getIntExtra("total", 0);
-                            message += " ping:" + ok + "/" + total;
+                            extra = " ping:" + ok + "/" + total;
                         }
-                        if (mReachable) {
-                            showNotificationIcon(ctx, mNetworkStateInfo.getIcon(), message);
-                        } else {
-                            showNotificationIcon(ctx, R.drawable.state_warn, message);
-                        }
+                        showNotificationIcon(ctx, iconRes, mNetworkStateInfo, extra);
                     }
                 }
                 return;
@@ -129,7 +131,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
     private void updateState(Context ctx) {
         if (mNetworkStateInfo.update()) {
             // 状態が変化したら通知アイコンを更新
-            showNotificationIcon(ctx, mNetworkStateInfo.getIcon(), mNetworkStateInfo.getStateMessage());
+            showNotificationIcon(ctx, mNetworkStateInfo.getIcon(), mNetworkStateInfo, null);
             if (!WifiState.isLiteVersion(ctx)) {
                 if (WifiStatePreferences.getPing(ctx) &&
                         (mNetworkStateInfo.getState().equals(NetworkStateInfo.States.STATE_WIFI_CONNECTED) ||
@@ -206,15 +208,24 @@ public class WifiStateReceiver extends BroadcastReceiver {
      * @param iconRes 表示するアイコンのリソースID
      * @param message 表示するメッセージ
      */
-    public static void showNotificationIcon(Context ctx, int iconRes, String message) {
+    private static void showNotificationIcon(Context ctx, int iconRes, NetworkStateInfo networkStateInfo, String extraMessage) {
         NotificationManager notificationManager = (NotificationManager)
                 ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification = new Notification(iconRes,
                 ctx.getResources().getString(R.string.app_name), System.currentTimeMillis());
         Intent intent = new Intent(ctx, WifiStateLaunchReceiver.class);
         PendingIntent contentIntent = PendingIntent.getBroadcast(ctx, 0, intent, 0);
-        notification.setLatestEventInfo(ctx, ctx.getResources().getString(R.string.app_name),
-                message, contentIntent);
+        String title;
+        if (networkStateInfo.getNetworkName() != null) {
+            title = networkStateInfo.getNetworkType() + ": " + networkStateInfo.getNetworkName();
+        } else {
+            title = ctx.getResources().getString(R.string.app_name);
+        }
+        String message = mNetworkStateInfo.getDetail();
+        if (extraMessage != null) {
+            message += extraMessage;
+        }
+        notification.setLatestEventInfo(ctx, title, message, contentIntent);
         notification.flags = 0;
         if (!WifiStatePreferences.getClearable(ctx)) {
             notification.flags |= (Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR);
