@@ -1,11 +1,9 @@
-dist/
-work/
-WifiStateCore/bin/
-WifiStateCore/gen/
-WifiStateLite/bin/
-WifiStateLite/gen/
-WifiStateLite/proguard/
-WifiStatePlus/bin/
-WifiStatePlus/gen/
-WifiStatePlus/proguard/
+/.gradle
+/local.properties
+
+# IntelliJ IDEA project files
+/.idea
+*.ipr
+*.iml
+
 *.bak
