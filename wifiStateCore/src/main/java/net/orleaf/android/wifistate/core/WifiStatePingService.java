@@ -7,12 +7,14 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
@@ -63,10 +65,25 @@ public class WifiStatePingService extends Service {
         registerReceiver(mScreenReceiver, filter);
     }
 
+    // This is the old onStart method that will be called on the pre-2.0
+    // platform.  On 2.0 or later we override onStartCommand() so this
+    // method will not be called.
+    @SuppressWarnings("deprecation")
     @Override
     public void onStart(Intent intent, int startId) {
-        super.onStart(intent, startId);
+        handleCommand(intent);
+    }
 
+    @TargetApi(5)
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        handleCommand(intent);
+        // We want this service to continue running until it is explicitly
+        // stopped, so return sticky.
+        return START_STICKY;
+    }
+
+    public void handleCommand(Intent intent) {
         // 監視先ホスト取得
         String target = WifiStatePreferences.getPingTarget(this);
         if (target != null && target.length() > 0) {
