@@ -17,8 +17,6 @@ import net.orleaf.android.wifistate.core.R;
 
 public class AboutActivity extends Activity
 {
-    private String mTitle;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,17 +26,19 @@ public class AboutActivity extends Activity
         setContentView(R.layout.about);
 
         Intent intent = getIntent();
-        mTitle = intent.getStringExtra("title");
+        String title = intent.getStringExtra("title");
 
         // タイトル
-        if (mTitle == null) {
-            mTitle = getResources().getString(R.string.app_name);
+        if (title == null) {
+            title = getResources().getString(R.string.app_name);
         }
         try {
             PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
-            mTitle += " ver." + pi.versionName;
-        } catch (NameNotFoundException e) {}
-        setTitle(mTitle);
+            title += " ver." + pi.versionName;
+        } catch (NameNotFoundException e) {
+            throw new AssertionError(e);
+        }
+        setTitle(title);
 
         getWindow().setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
                 R.drawable.icon);
@@ -55,7 +55,9 @@ public class AboutActivity extends Activity
             try {
                 String str = ar.getText(bodyAsset);
                 text.setText(str);
-            } catch (IOException e) {}
+            } catch (IOException e) {
+                throw new AssertionError(e);
+            }
         }
 
         // OK

@@ -55,7 +55,7 @@ public class NetworkStateInfo {
     /**
      * Constructor
      *
-     * @param ctx
+     * @param ctx Context
      */
     public NetworkStateInfo(Context ctx) {
         mCtx = ctx;
@@ -125,7 +125,7 @@ public class NetworkStateInfo {
                     newStateDetail = res.getString(R.string.state_scanning);
                 } else if (mSupplicantState == SupplicantState.ASSOCIATING) {
                     newState = States.STATE_WIFI_CONNECTING;
-                    newStateDetail = res.getString(R.string.state_associating);;
+                    newStateDetail = res.getString(R.string.state_associating);
                 } else if (mSupplicantState == SupplicantState.ASSOCIATED) {
                     newState = States.STATE_WIFI_CONNECTING;
                     newStateDetail = res.getString(R.string.state_associated);
@@ -195,8 +195,6 @@ public class NetworkStateInfo {
     /**
      * 消去可能な状態かどうか
      *
-     * @param ctx コンテキスト
-     * @param states 状態
      * @return true:消去可能
      */
     public boolean isClearableState() {
@@ -218,7 +216,6 @@ public class NetworkStateInfo {
     /**
      * アイコンを取得
      *
-     * @param state 状態
      * @return アイコンのリソースID
      */
     public int getIcon() {

@@ -72,7 +72,7 @@ public class NumberSeekbarPreference extends DialogPreference {
                 if (mValue == 0 && mZero != null) {
                     textView.setText(mZero);
                 } else {
-                    textView.setText(mValue + mUnit);
+                    textView.setText(String.format("%d%s", mValue, mUnit));
                 }
             }
 
@@ -85,7 +85,7 @@ public class NumberSeekbarPreference extends DialogPreference {
         if (mValue == 0 && mZero != null) {
             textView.setText(mZero);
         } else {
-            textView.setText(mValue + mUnit);
+            textView.setText(String.format("%d%s", mValue, mUnit));
         }
     }
 

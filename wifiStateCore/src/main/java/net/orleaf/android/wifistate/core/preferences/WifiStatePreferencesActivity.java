@@ -67,7 +67,7 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
      * @param val 設定値
      * @param entries　表示文字列の配列
      * @param entryvalues　設定値の配列
-     * @return
+     * @return 表示文字列
      */
     private String getEntryString(String val, String[] entries, String[] entryvalues) {
         for (int i = 0; i < entries.length; i++) {

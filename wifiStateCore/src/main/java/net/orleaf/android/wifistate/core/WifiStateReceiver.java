@@ -16,7 +16,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import net.orleaf.android.wifistate.core.WifiStateControlService;
 import net.orleaf.android.wifistate.core.preferences.WifiStatePreferences;
 
 public class WifiStateReceiver extends BroadcastReceiver {
@@ -136,7 +135,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
                 if (WifiStatePreferences.getPing(ctx) &&
                         (mNetworkStateInfo.getState().equals(NetworkStateInfo.States.STATE_WIFI_CONNECTED) ||
                                 (mNetworkStateInfo.getState().equals(NetworkStateInfo.States.STATE_MOBILE_CONNECTED) &&
-                                        WifiStatePreferences.getPingOnMobile(ctx) == true))) {
+                                        WifiStatePreferences.getPingOnMobile(ctx)))) {
                     // ネットワーク疎通監視サービス開始
                     mReachable = true;
                     WifiStatePingService.startService(ctx, mNetworkStateInfo.getGatewayIpAddress());
@@ -158,7 +157,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
     /**
      * 状態をクリア
      *
-     * @param ctx
+     * @param ctx Context
      */
     public static void disable(Context ctx) {
         if (mPhoneStateListener != null) {
@@ -204,9 +203,9 @@ public class WifiStateReceiver extends BroadcastReceiver {
     /**
      * ステータスバーに通知アイコンを表示
      *
-     * @param ctx
+     * @param ctx Context
      * @param iconRes 表示するアイコンのリソースID
-     * @param message 表示するメッセージ
+     * @param extraMessage 表示するメッセージ
      */
     private static void showNotificationIcon(Context ctx, int iconRes, NetworkStateInfo networkStateInfo, String extraMessage) {
         NotificationManager notificationManager = (NotificationManager)
@@ -254,9 +253,9 @@ public class WifiStateReceiver extends BroadcastReceiver {
             Set<String> keySet = extras.keySet();
             if (keySet != null) {
                 Object[] keys = keySet.toArray();
-                for (int i = 0; i < keys.length; i++) {
-                    Object o = extras.get((String)keys[i]);
-                    Log.d(WifiState.TAG, "  " + (String)keys[i] + " = (" + o.getClass().getName() + ") " + o.toString());
+                for (Object key : keys) {
+                    Object o = extras.get((String) key);
+                    Log.d(WifiState.TAG, "  " + key + " = (" + o.getClass().getName() + ") " + o.toString());
                 }
             }
         }

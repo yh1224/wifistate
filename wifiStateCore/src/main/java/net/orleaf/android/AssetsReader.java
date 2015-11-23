@@ -32,10 +32,10 @@ public class AssetsReader {
             fin = as.open(filename);
         }
         BufferedReader in = new BufferedReader(new InputStreamReader(fin));
-        StringBuffer str = new StringBuffer();
+        StringBuilder str = new StringBuilder();
         String s;
         while ((s = in.readLine()) != null) {
-            str.append(s + "\n");
+            str.append(s).append("\n");
         }
         in.close();
         return str.toString();

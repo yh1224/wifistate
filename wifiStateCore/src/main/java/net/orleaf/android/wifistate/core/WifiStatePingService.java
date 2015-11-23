@@ -174,7 +174,7 @@ public class WifiStatePingService extends Service {
             while (this == mThread) {
                 if (WifiState.DEBUG) Log.d(WifiState.TAG, "Pinging: " + mTarget);
 
-                boolean reachable = false;
+                boolean reachable;
                 int ntry = WifiStatePreferences.getPingRetry(WifiStatePingService.this) + 1;
                 int timeout = WifiStatePreferences.getPingTimeout(WifiStatePingService.this);
                 int count;
@@ -267,10 +267,10 @@ public class WifiStatePingService extends Service {
         private String readAll(InputStream stream) throws IOException {
             String line;
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream), 1024);
-            StringBuffer msg = new StringBuffer();
+            StringBuilder msg = new StringBuilder();
             while ((line = reader.readLine()) != null) {
                 if (WifiState.DEBUG) Log.v(WifiState.TAG, " |" + line);
-                msg.append(line + "\n");
+                msg.append(line).append("\n");
             }
             return msg.toString().trim();
         }
@@ -280,7 +280,7 @@ public class WifiStatePingService extends Service {
     /**
      * ネットワーク疎通監視サービス開始
      *
-     * @param ctx
+     * @param ctx Context
      * @param target 監視先ホスト
      */
     public static boolean startService(Context ctx, String target) {
@@ -307,7 +307,7 @@ public class WifiStatePingService extends Service {
             Intent i = new Intent();
             i.setComponent(mService);
             boolean res = ctx.stopService(i);
-            if (res == false) {
+            if (!res) {
                 Log.e(WifiState.TAG, "WifiStatePingService could not stop!");
             } else {
                 Log.d(WifiState.TAG, "Service stopped: " + mService);

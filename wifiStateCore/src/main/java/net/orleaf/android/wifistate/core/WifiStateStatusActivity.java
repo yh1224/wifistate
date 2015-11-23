@@ -198,7 +198,7 @@ public class WifiStateStatusActivity extends Activity {
             startActivity(intent);
         }
         return true;
-    };
+    }
 
     /**
      * コンテキストメニュー(接続先)の生成
@@ -266,7 +266,7 @@ public class WifiStateStatusActivity extends Activity {
             protected Boolean doInBackground(Object... params) {
                 try {   // UIを優先し、ちょっと待つ
                     Thread.sleep(500);
-                } catch (InterruptedException e) {}
+                } catch (InterruptedException ignored) {}
                 // これがあるとIS01で固まる
                 //if (!enable) mWifiManager.disconnect();
                 WifiStateControlService.startService(WifiStateStatusActivity.this, action);

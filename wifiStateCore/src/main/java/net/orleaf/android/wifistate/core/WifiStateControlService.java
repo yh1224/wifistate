@@ -159,7 +159,7 @@ public class WifiStateControlService extends Service {
     /**
      * Wi-Fi 再有効化処理開始
      *
-     * @param ctx
+     * @param ctx Context
      * @param action ACTION_WIFI_ENABLE / ACTION_WIFI_DISABLE / ACTION_WIFI_REENABLE
      * @param sleep 有効化までの待ち時間(ACTION_WIFI_REENABLE指定時のみ)
      * @return true:成功 false:失敗
@@ -183,7 +183,7 @@ public class WifiStateControlService extends Service {
     /**
      * Wi-Fi 再有効化処理開始
      *
-     * @param ctx
+     * @param ctx Context
      * @param action ACTION_WIFI_ENABLE / ACTION_WIFI_DISABLE / ACTION_WIFI_REENABLE
      * @return true:成功 false:失敗
      */
