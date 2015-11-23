@@ -53,6 +53,12 @@ public class WifiStatePreferences
     public static final String PREF_PING_DISABLE_WIFI_PERIOD_KEY = "ping_disable_wifi_period";
     public static final int PREF_PING_DISABLE_WIFI_PERIOD_DEFAULT = 0;
 
+    public static final String PREF_WIFI_SETTINGS_KEY = "wifi_settings";
+
+    public static final String PREF_BROWSE_ROUTER = "browse_router";
+
+    public static final String PREF_ABOUT = "about";
+
     public static boolean getEnabled(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(
                 WifiStatePreferences.PREF_ENABLED_KEY,

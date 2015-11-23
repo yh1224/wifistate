@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 4
+    compileSdkVersion 19
     buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "net.orleaf.android.wifistate.plus"
         minSdkVersion 4
-        targetSdkVersion 4
+        targetSdkVersion 19
     }
 
     buildTypes {

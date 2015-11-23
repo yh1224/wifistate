@@ -46,4 +46,16 @@
             android:title="@string/pref_action_on_tap_title" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/preferences_other" >
+        <Preference
+            android:key="wifi_settings"
+            android:title="@string/wifi_settings" />
+        <Preference
+            android:key="browse_router"
+            android:title="@string/browse_router" />
+        <Preference
+            android:key="about"
+            android:title="@string/about" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

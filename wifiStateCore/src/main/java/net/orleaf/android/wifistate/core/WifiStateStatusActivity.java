@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -16,8 +15,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import net.orleaf.android.AboutActivity;
 import net.orleaf.android.wifistate.core.preferences.WifiStatePreferencesActivity;
 
 /**
@@ -44,7 +40,7 @@ public class WifiStateStatusActivity extends Activity {
 
     // Views
     private ToggleButton mWifiToggle;
-    private Button mWifiSettings;
+    private Button mSettings;
     private Button mWifiReenable;
     private LinearLayout mNetworkLayout;
     private TextView mNetworkNameText;
@@ -66,12 +62,12 @@ public class WifiStateStatusActivity extends Activity {
         mNetworkNameText = (TextView) findViewById(R.id.network_name);
         mNetworkStateText = (TextView) findViewById(R.id.network_status);
 
-        // Wi-Fi 設定ボタン
-        mWifiSettings = (Button) findViewById(R.id.wifi_settings);
-        mWifiSettings.setOnClickListener(new OnClickListener() {
+        // 設定ボタン
+        mSettings = (Button) findViewById(R.id.settings);
+        mSettings.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
+                startActivity(new Intent(WifiStateStatusActivity.this, WifiStatePreferencesActivity.class));
             }
         });
 
@@ -151,53 +147,6 @@ public class WifiStateStatusActivity extends Activity {
             mConnectivityReceiver = null;
         }
         mHandler.removeCallbacks(mStartUpdate);
-    }
-
-    /**
-     * オプションメニューの生成
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        mRouterMenu = menu.findItem(R.id.menu_router);
-        if (mNetworkStateInfo.getGatewayIpAddress() != null) {
-            mRouterMenu.setVisible(true);
-        } else {
-            mRouterMenu.setVisible(false);
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    /**
-     * オプションメニュー選択時の処理
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_config) {
-            // 設定
-            Intent intent = new Intent().setClass(this, WifiStatePreferencesActivity.class);
-            startActivity(intent);
-        } else if (itemId == R.id.menu_router) {
-            // ルータ設定
-            String gatewayAddr = mNetworkStateInfo.getGatewayIpAddress();
-            if (gatewayAddr != null) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + gatewayAddr));
-                startActivity(intent);
-            }
-        } else if (itemId == R.id.menu_about) {
-            // バージョン情報
-            Intent intent = new Intent().setClass(this, AboutActivity.class);
-            intent.putExtra("body_asset", "about.txt");
-            startActivity(intent);
-        }
-        return true;
     }
 
     /**

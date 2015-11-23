@@ -1,11 +1,17 @@
 package net.orleaf.android.wifistate.core.preferences;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceScreen;
 
+import net.orleaf.android.AboutActivity;
+import net.orleaf.android.wifistate.core.NetworkStateInfo;
 import net.orleaf.android.wifistate.core.R;
 import net.orleaf.android.wifistate.core.WifiState;
 import net.orleaf.android.wifistate.core.WifiStateReceiver;
@@ -22,6 +28,10 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
     private NumberSeekbarPreference mPrefPingInterval;
     private NumberSeekbarPreference mPrefPingRetry;
     private NumberSeekbarPreference mPrefPingDisableWifiPeriod;
+    private Preference mPrefWifiSettings;
+    private Preference mPrefBrowseRouter;
+    private Preference mPrefAbout;
+    private NetworkStateInfo mNetworkStateInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +48,38 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
         mPrefPingInterval = (NumberSeekbarPreference) findPreference(WifiStatePreferences.PREF_PING_INTERVAL_KEY);
         mPrefPingRetry = (NumberSeekbarPreference) findPreference(WifiStatePreferences.PREF_PING_RETRY_KEY);
         mPrefPingDisableWifiPeriod = (NumberSeekbarPreference) findPreference(WifiStatePreferences.PREF_PING_DISABLE_WIFI_PERIOD_KEY);
+        mPrefWifiSettings = findPreference(WifiStatePreferences.PREF_WIFI_SETTINGS_KEY);
+        mPrefBrowseRouter = findPreference(WifiStatePreferences.PREF_BROWSE_ROUTER);
+        mPrefAbout = findPreference(WifiStatePreferences.PREF_ABOUT);
 
         updateSummary();
     }
 
+    @Override
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
+                                         Preference preference) {
+        if (preference == mPrefWifiSettings) {
+            // Wi-Fi 設定
+            startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
+        } else if (preference == mPrefBrowseRouter) {
+            // ルータ設定
+            if (mNetworkStateInfo == null) {
+                mNetworkStateInfo = new NetworkStateInfo(this);
+            }
+            mNetworkStateInfo.update();
+            String gatewayAddr = mNetworkStateInfo.getGatewayIpAddress();
+            if (gatewayAddr != null) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + gatewayAddr));
+                startActivity(intent);
+            }
+        } else if (preference == mPrefAbout) {
+            // バージョン情報
+            Intent intent = new Intent().setClass(this, AboutActivity.class);
+            intent.putExtra("body_asset", "about.txt");
+            startActivity(intent);
+        }
+        return true;
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -110,6 +148,16 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
             mPrefPingDisableWifiPeriod.setSummary(
                     mPrefPingDisableWifiPeriod.getValue() +
                     getResources().getString(R.string.pref_ping_disable_wifi_period_unit));
+        }
+
+        if (mNetworkStateInfo == null) {
+            mNetworkStateInfo = new NetworkStateInfo(this);
+        }
+        mNetworkStateInfo.update();
+        if (mNetworkStateInfo.getGatewayIpAddress() != null) {
+            mPrefBrowseRouter.setEnabled(true);
+        } else {
+            mPrefBrowseRouter.setEnabled(false);
         }
     }
 
