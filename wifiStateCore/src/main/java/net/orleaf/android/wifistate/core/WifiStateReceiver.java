@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -187,16 +188,20 @@ public class WifiStateReceiver extends BroadcastReceiver {
             R.drawable.state_m8,
         };
         for (int i = 0; i < icons.length; i++) {
-            NotificationManager notificationManager = (NotificationManager)
-                    ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-            Notification notification = new Notification(icons[i],
-                    ctx.getResources().getString(R.string.app_name), System.currentTimeMillis());
             Intent intent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, intent, 0);
-            notification.setLatestEventInfo(ctx, ctx.getResources().getString(R.string.app_name),
-                    "State" + i, contentIntent);
-            //notification.flags |= Notification.FLAG_ONGOING_EVENT;
+
+            Notification notification = new NotificationCompat.Builder(ctx)
+                    .setSmallIcon(icons[i])
+                    .setContentTitle(ctx.getResources().getString(R.string.app_name))
+                    .setContentText("State" + i)
+                    .setContentIntent(contentIntent)
+                    .setWhen(System.currentTimeMillis())
+                    .build();
+
+            NotificationManager notificationManager = (NotificationManager)
+                    ctx.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(i, notification);
         }
     }
@@ -209,12 +214,9 @@ public class WifiStateReceiver extends BroadcastReceiver {
      * @param extraMessage 表示するメッセージ
      */
     private static void showNotificationIcon(Context ctx, int iconRes, NetworkStateInfo networkStateInfo, String extraMessage) {
-        NotificationManager notificationManager = (NotificationManager)
-                ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification(iconRes,
-                ctx.getResources().getString(R.string.app_name), System.currentTimeMillis());
         Intent intent = new Intent(ctx, WifiStateLaunchReceiver.class);
         PendingIntent contentIntent = PendingIntent.getBroadcast(ctx, 0, intent, 0);
+
         String title;
         if (networkStateInfo.getNetworkName() != null) {
             title = networkStateInfo.getNetworkType() + ": " + networkStateInfo.getNetworkName();
@@ -225,11 +227,17 @@ public class WifiStateReceiver extends BroadcastReceiver {
         if (extraMessage != null) {
             message += extraMessage;
         }
-        notification.setLatestEventInfo(ctx, title, message, contentIntent);
-        notification.flags = 0;
-        if (!WifiStatePreferences.getClearable(ctx)) {
-            notification.flags |= (Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR);
-        }
+        Notification notification = new NotificationCompat.Builder(ctx)
+                .setSmallIcon(iconRes)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setContentIntent(contentIntent)
+                .setWhen(System.currentTimeMillis())
+                .setOngoing(!WifiStatePreferences.getClearable(ctx))
+                .build();
+
+        NotificationManager notificationManager = (NotificationManager)
+                ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(NOTIFICATIONID_ICON, notification);
     }
 
