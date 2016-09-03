@@ -1,9 +1,7 @@
-/.gradle
-/local.properties
-
-# IntelliJ IDEA project files
-/.idea
-*.ipr
 *.iml
-
-*.bak
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
