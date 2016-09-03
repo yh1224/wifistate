@@ -14,7 +14,10 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
         }
+        debug {
+        }
     }
+    publishNonDefault true
 }
 
 dependencies {

@@ -19,5 +19,6 @@ android {
 }
 
 dependencies {
-    compile project(':wifiStateCore')
+    releaseCompile project(path: ':wifiStateCore', configuration: 'release')
+    debugCompile project(path: ':wifiStateCore', configuration: 'debug')
 }

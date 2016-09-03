@@ -97,14 +97,14 @@ public class WifiStateControlService extends Service {
         int state = wm.getWifiState();
         wm.setWifiEnabled(enable);
         if (enable) {
-            if (WifiState.DEBUG) Log.d(WifiState.TAG, "Wi-Fi enabled.");
+            if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "Wi-Fi enabled.");
             if (state != WifiManager.WIFI_STATE_ENABLED) {
                 Toast.makeText(this, R.string.enabling_wifi, Toast.LENGTH_SHORT).show();
             }
         } else {
             // これがあるとIS01で固まった?
             //if (!enable) mWifiManager.disconnect();
-            if (WifiState.DEBUG) Log.d(WifiState.TAG, "Wi-Fi disbled.");
+            if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "Wi-Fi disbled.");
             if (state != WifiManager.WIFI_STATE_DISABLED) {
                 Toast.makeText(this, R.string.disabling_wifi, Toast.LENGTH_SHORT).show();
             }
@@ -127,7 +127,7 @@ public class WifiStateControlService extends Service {
         }
 
         // 無効化
-        if (WifiState.DEBUG) Log.d(WifiState.TAG, "Wi-Fi disabled.");
+        if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "Wi-Fi disabled.");
         wm.setWifiEnabled(false);
         Toast.makeText(this, R.string.disabling_wifi, Toast.LENGTH_SHORT).show();
 
@@ -137,10 +137,10 @@ public class WifiStateControlService extends Service {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     int state = intent.getIntExtra("wifi_state", -1);
-                    if (WifiState.DEBUG) Log.d(WifiState.TAG, "*** wifi_state = " + state);
+                    if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "*** wifi_state = " + state);
                     if (state == WifiManager.WIFI_STATE_DISABLED) {
                         // 無効化が完了したら時間をおいて有効化
-                        if (WifiState.DEBUG) Log.d(WifiState.TAG, "Wi-Fi enable after " + sleep + " min.");
+                        if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "Wi-Fi enable after " + sleep + " min.");
                         mHandler.postDelayed(mOnWifiChanged, sleep * 60 * 1000);
                     }
                 }
@@ -153,7 +153,7 @@ public class WifiStateControlService extends Service {
     private Runnable mOnWifiChanged = new Runnable() {
         @Override
         public void run() {
-            if (WifiState.DEBUG) Log.d(WifiState.TAG, "Wi-Fi reenabling.");
+            if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "Wi-Fi reenabling.");
             enableWifi();
             cancelReenable();
         }
@@ -163,7 +163,7 @@ public class WifiStateControlService extends Service {
      * Wi-Fi 再有効化停止
      */
     private void cancelReenable() {
-        if (WifiState.DEBUG) Log.d(WifiState.TAG, "Canceling Wi-Fi reenable.");
+        if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "Canceling Wi-Fi reenable.");
         mHandler.removeCallbacks(mOnWifiChanged);
         if (mReenableReceiver != null) {
             unregisterReceiver(mReenableReceiver);
@@ -190,7 +190,7 @@ public class WifiStateControlService extends Service {
             Log.e(WifiState.TAG, "WifiStateControlService could not start!");
             result = false;
         } else {
-            if (WifiState.DEBUG) Log.d(WifiState.TAG, "WifiStateControlService started: " + name);
+            if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "WifiStateControlService started: " + name);
             result = true;
         }
         return result;

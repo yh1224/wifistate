@@ -164,7 +164,7 @@ public class NetworkStateInfo {
 
         if (newState == null) {
             // no change
-            if (WifiState.DEBUG) Log.d(WifiState.TAG, "State not recognized.");
+            if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "State not recognized.");
             return false;
         }
         if (newState == mState && mStateDetail != null && newStateDetail.equals(mStateDetail)) {
@@ -172,7 +172,7 @@ public class NetworkStateInfo {
             return false;
         }
 
-        if (WifiState.DEBUG) Log.d(WifiState.TAG, "=>[" + newState + "] " + newStateDetail);
+        if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "=>[" + newState + "] " + newStateDetail);
         mState = newState;
         mStateDetail = newStateDetail;
 

@@ -43,7 +43,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
      */
     @Override
     public void onReceive(final Context ctx, Intent intent) {
-        if (WifiState.DEBUG) logIntent(intent);
+        if (BuildConfig.DEBUG) logIntent(intent);
 
         if (!WifiStatePreferences.getEnabled(ctx)) {
             return;
@@ -89,7 +89,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
                             iconRes = R.drawable.state_warn;
                         }
                         String extra = null;
-                        if (WifiState.DEBUG) {
+                        if (BuildConfig.DEBUG) {
                             int ok = intent.getIntExtra("ok", 0);
                             int total = intent.getIntExtra("total", 0);
                             extra = " ping:" + ok + "/" + total;

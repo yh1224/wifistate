@@ -8,8 +8,6 @@ public class WifiState {
 
     private static final String PACKAGE_NAME_LITE = "net.orleaf.android.wifistate";
 
-    public static final boolean DEBUG = false;
-
     /**
      * 無料版チェック
      *

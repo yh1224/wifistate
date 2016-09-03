@@ -49,7 +49,7 @@ public class WifiStatePingService extends Service {
         mScreenReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (WifiState.DEBUG) Log.d(WifiState.TAG, "received intent: " + intent.getAction());
+                if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "received intent: " + intent.getAction());
                 if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                     // 画面ONで開始
                     startPing();
@@ -110,7 +110,7 @@ public class WifiStatePingService extends Service {
      * 監視開始
      */
     private void startPing() {
-        if (WifiState.DEBUG) Log.d(WifiState.TAG, "Target: " + mTarget);
+        if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "Target: " + mTarget);
         if (mTarget != null) {
             mReachable = true;
             mNumPing = 0;
@@ -187,9 +187,9 @@ public class WifiStatePingService extends Service {
     private class PingThread extends Thread {
         @Override
         public void run() {
-            if (WifiState.DEBUG) Log.d(WifiState.TAG, "Thread started. (" + getId() + ")");
+            if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "Thread started. (" + getId() + ")");
             while (this == mThread) {
-                if (WifiState.DEBUG) Log.d(WifiState.TAG, "Pinging: " + mTarget);
+                if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "Pinging: " + mTarget);
 
                 boolean reachable;
                 int ntry = WifiStatePreferences.getPingRetry(WifiStatePingService.this) + 1;
@@ -234,7 +234,7 @@ public class WifiStatePingService extends Service {
                     e.printStackTrace();
                 }
             }
-            if (WifiState.DEBUG) Log.d(WifiState.TAG, "Thread stoppped. (" + getId() + ")");
+            if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "Thread stoppped. (" + getId() + ")");
         }
 
         /**
@@ -263,7 +263,7 @@ public class WifiStatePingService extends Service {
                     //String err = readAll(process.getErrorStream());
                     //process.destroy();
                     if (process.exitValue() == 0) {
-                        if (WifiState.DEBUG) Log.d(WifiState.TAG, "ping success: " + target);
+                        if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "ping success: " + target);
                         result = true;
                     } else {
                         Log.e(WifiState.TAG, "ping failed: " + target);
@@ -286,7 +286,7 @@ public class WifiStatePingService extends Service {
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream), 1024);
             StringBuilder msg = new StringBuilder();
             while ((line = reader.readLine()) != null) {
-                if (WifiState.DEBUG) Log.v(WifiState.TAG, " |" + line);
+                if (BuildConfig.DEBUG) Log.v(WifiState.TAG, " |" + line);
                 msg.append(line).append("\n");
             }
             return msg.toString().trim();
