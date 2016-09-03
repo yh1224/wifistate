@@ -15,6 +15,9 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
         }
+        debug {
+            applicationIdSuffix = ".debug"
+        }
     }
 }
 
