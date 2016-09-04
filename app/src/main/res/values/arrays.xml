@@ -7,7 +7,7 @@
         <item>@string/reenable_wifi</item>
         <item>@string/open_wifi_settings</item>
     </string-array>
-    <string-array name="entryvalues_action_on_tap">
+    <string-array name="entryvalues_action_on_tap" translatable="false">
         <item>open_dialog</item>
         <item>toggle_wifi</item>
         <item>reenable_wifi</item>

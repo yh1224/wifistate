@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Wifi State</string>
-    <string name="ok">OK</string>
+    <string name="app_name" translatable="false">Wifi State</string>
+    <string name="ok" translatable="false">OK</string>
     <string name="preferences">Settings</string>
     <string name="preferences_notification">State indication</string>
     <string name="preferences_ping">Health indication</string>
     <string name="preferences_other">Other</string>
     <string name="about">About</string>
     <string name="support">Support</string>
-    <string name="support_url">http://orleaf.net</string>
+    <string name="support_url" translatable="false">http://orleaf.net</string>
     <string name="pref_enable_title">Enable</string>
     <string name="pref_clearable_title">Clearable</string>
     <string name="pref_clearable_summary">Enable to clear manually.</string>
