@@ -26,6 +26,8 @@ import net.orleaf.android.wifistate.core.preferences.WifiStatePreferences;
  * ネットワーク疎通監視サービス
  */
 public class WifiStatePingService extends Service {
+    public static final String TAG = WifiStatePingService.class.getSimpleName();
+
     public static final String EXTRA_TARGET = "target";
 
     private static final boolean TESTMODE = false;
@@ -50,7 +52,7 @@ public class WifiStatePingService extends Service {
         mScreenReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "received intent: " + intent.getAction());
+                if (BuildConfig.DEBUG) Log.d(TAG, "received intent: " + intent.getAction());
                 if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                     // 画面ONで開始
                     startPing();

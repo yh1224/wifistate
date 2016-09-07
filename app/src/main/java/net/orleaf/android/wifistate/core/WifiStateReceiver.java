@@ -22,6 +22,8 @@ import net.orleaf.android.wifistate.R;
 import net.orleaf.android.wifistate.core.preferences.WifiStatePreferences;
 
 public class WifiStateReceiver extends BroadcastReceiver {
+    private static final String TAG = WifiStateReceiver.class.getSimpleName();
+
     private static final int NOTIFICATIONID_ICON = 1;
     private static final String ACTION_CLEAR_NOTIFICATION = "net.orleaf.android.wifistate.CLEAR_NOTIFICATION";
 
@@ -258,7 +260,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
      * インテントのログ採取
      */
     private static void logIntent(Intent intent) {
-        Log.d(WifiState.TAG, "received intent: " + intent.getAction());
+        Log.d(TAG, "received intent: " + intent.getAction());
 
         Bundle extras = intent.getExtras();
         if (extras != null) {
@@ -267,7 +269,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
                 Object[] keys = keySet.toArray();
                 for (Object key : keys) {
                     Object o = extras.get((String) key);
-                    Log.d(WifiState.TAG, "  " + key + " = (" + o.getClass().getName() + ") " + o.toString());
+                    Log.d(TAG, "  " + key + " = (" + o.getClass().getName() + ") " + o.toString());
                 }
             }
         }

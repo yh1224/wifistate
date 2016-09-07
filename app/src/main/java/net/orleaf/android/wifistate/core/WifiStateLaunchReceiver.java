@@ -4,22 +4,26 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
+import net.orleaf.android.wifistate.BuildConfig;
 import net.orleaf.android.wifistate.core.preferences.WifiStatePreferences;
 
 /**
  * ステータスバーの通知アイコンがタップされた場合の処理
  */
 public class WifiStateLaunchReceiver extends BroadcastReceiver {
+    private static final String TAG = WifiStateLaunchReceiver.class.getSimpleName();
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        WifiManager mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        if (BuildConfig.DEBUG) Log.d(TAG, "received intent: " + intent.getAction());
 
         String onTap = WifiStatePreferences.getActionOnTap(context);
         if (onTap.equals("toggle_wifi")) {
+            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             // ON/OFF
-            if (mWifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
+            if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
                 WifiStateControlService.startService(context, WifiStateControlService.ACTION_WIFI_ENABLE);
             } else {
                 WifiStateControlService.startService(context, WifiStateControlService.ACTION_WIFI_DISABLE);
