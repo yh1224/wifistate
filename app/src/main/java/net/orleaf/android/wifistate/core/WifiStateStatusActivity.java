@@ -112,6 +112,9 @@ public class WifiStateStatusActivity extends Activity {
 
         // 少し待ってから情報を取得
         mHandler.postDelayed(mStartUpdate, 500);
+
+        // 通知更新
+        WifiStateReceiver.startNotification(this);
     }
 
     /**

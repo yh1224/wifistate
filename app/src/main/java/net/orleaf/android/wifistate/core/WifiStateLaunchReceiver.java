@@ -34,7 +34,7 @@ public class WifiStateLaunchReceiver extends BroadcastReceiver {
             WifiStateControlService.startService(context, WifiStateControlService.ACTION_WIFI_REENABLE);
         } else {
             // ダイアログを開く
-            Intent launchIntent = new Intent(context, WifiStateActivity.class);
+            Intent launchIntent = new Intent(context, WifiStateStatusActivity.class);
             launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(launchIntent);
         }
