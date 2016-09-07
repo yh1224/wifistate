@@ -153,7 +153,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
                 long next = SystemClock.elapsedRealtime() + 3000;
                 Intent clearIntent = new Intent(ctx, WifiStateReceiver.class).setAction(ACTION_CLEAR_NOTIFICATION);
                 AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
-                alarmManager.set(AlarmManager.ELAPSED_REALTIME, next, PendingIntent.getBroadcast(ctx, 0, clearIntent, 0));
+                alarmManager.set(AlarmManager.ELAPSED_REALTIME, next, PendingIntent.getBroadcast(ctx, 0, clearIntent, PendingIntent.FLAG_CANCEL_CURRENT));
             }
         }
     }
@@ -218,7 +218,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
      */
     private static void showNotificationIcon(Context ctx, int iconRes, NetworkStateInfo networkStateInfo, String extraMessage) {
         Intent intent = new Intent(ctx, WifiStateLaunchReceiver.class);
-        PendingIntent contentIntent = PendingIntent.getBroadcast(ctx, 0, intent, 0);
+        PendingIntent contentIntent = PendingIntent.getBroadcast(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         String title;
         if (networkStateInfo.getNetworkName() != null) {
