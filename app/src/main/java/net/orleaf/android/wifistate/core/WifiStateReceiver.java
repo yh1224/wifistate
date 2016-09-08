@@ -31,8 +31,6 @@ public class WifiStateReceiver extends BroadcastReceiver {
     public static final String EXTRA_REACHABLE = "reachable";
     public static final String EXTRA_COUNT_OK = "ok";
     public static final String EXTRA_COUNT_NG = "ng";
-    public static final String EXTRA_COUNT_TOTAL_OK = "total_ok";
-    public static final String EXTRA_COUNT_TOTAL_NG = "total_ng";
     public static final String EXTRA_COUNT_TOTAL = "total";
 
     public static final String ACTION_PING_FAIL = "net.orleaf.android.wifistate.PING_FAIL";

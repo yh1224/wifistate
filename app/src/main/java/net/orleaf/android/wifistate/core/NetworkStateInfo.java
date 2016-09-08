@@ -208,6 +208,7 @@ public class NetworkStateInfo {
             // スキャン中は表示しない
             return true;
         }
+        //noinspection RedundantIfStatement
         if (WifiStatePreferences.getClearOnConnected(mCtx) && isConnected()) {
             // 接続完了時は表示しない
             return true;

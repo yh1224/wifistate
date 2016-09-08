@@ -14,7 +14,6 @@ import net.orleaf.android.AboutActivity;
 import net.orleaf.android.wifistate.BuildConfig;
 import net.orleaf.android.wifistate.R;
 import net.orleaf.android.wifistate.core.NetworkStateInfo;
-import net.orleaf.android.wifistate.core.WifiState;
 import net.orleaf.android.wifistate.core.WifiStateReceiver;
 
 /**

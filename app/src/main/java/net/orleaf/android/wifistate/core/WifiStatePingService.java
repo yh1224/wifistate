@@ -14,7 +14,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
@@ -246,6 +245,7 @@ public class WifiStatePingService extends Service {
         private boolean ping(String target, int timeout) {
             boolean result = false;
 
+            //noinspection ConstantIfStatement,ConstantConditions
             if (false) {
                 // 事前にアドレスを取得する
                 InetAddress inetAddress = null;

@@ -46,7 +46,6 @@ public class WifiStateStatusActivity extends Activity {
     private LinearLayout mNetworkLayout;
     private TextView mNetworkNameText;
     private TextView mNetworkStateText;
-    private MenuItem mRouterMenu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
