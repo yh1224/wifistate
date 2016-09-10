@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.orleaf.android.wifistate"
-    android:versionCode="16"
-    android:versionName="1.3" >
+    package="net.orleaf.android.wifistate" >
 </manifest>
