@@ -77,10 +77,10 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tips"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
-        android:text="@string/press_menu_to_config"
         android:textSize="12sp" />
 
 </LinearLayout>

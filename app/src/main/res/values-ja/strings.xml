@@ -57,7 +57,8 @@
     <string name="checking_status">状態を取得中です&#8230;</string>
     <string name="enabling_wifi">Wi-Fiを有効化しています&#8230;</string>
     <string name="disabling_wifi">Wi-Fiを無効化しています&#8230;</string>
-    <string name="press_menu_to_config">TIPS: 他のAPに接続したい場合は、SSID/APNをロングタップしてください。</string>
+    <string name="tips_1">SSID/APNを長押しすると、他のアクセスポイントを選択して接続することができます。</string>
+    <string name="tips_2">再接続ボタンを長押しすると、画面を閉じてから再接続します。</string>
     <string name="connect_to">接続先</string>
     <string name="open_dialog">ダイアログを開く</string>
     <string name="toggle_wifi">Wi-Fi ON/OFF</string>

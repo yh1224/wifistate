@@ -1,6 +1,7 @@
 package net.orleaf.android.wifistate.core;
 
 import java.util.List;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -110,6 +111,12 @@ public class WifiStateStatusActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        // Update TIPS
+        String[] tipss = getResources().getStringArray(R.array.tips);
+        String tips = "TIPS: " + tipss[new Random().nextInt(tipss.length)];
+        TextView tipsView = (TextView) findViewById(R.id.tips);
+        tipsView.setText(tips);
 
         // 少し待ってから情報を取得
         mHandler.postDelayed(mStartUpdate, 500);

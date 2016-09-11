@@ -61,7 +61,8 @@
     <string name="checking_status">Checking status&#8230;</string>
     <string name="enabling_wifi">Enabling Wi-Fi&#8230;</string>
     <string name="disabling_wifi">Disabling Wi-Fi&#8230;</string>
-    <string name="press_menu_to_config">TIPS: If you want to connect another AP, try long tap SSID/APN.</string>
+    <string name="tips_1">Long tap SSID/APN to select another Wi-Fi access point to connect.</string>
+    <string name="tips_2">Long tap Reconnect button to close and reconnect.</string>
     <string name="connect_to">Connect to</string>
     <string name="open_dialog">Open Dialog</string>
     <string name="toggle_wifi">Toggle Wi-Fi</string>
