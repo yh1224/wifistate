@@ -44,9 +44,9 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
-        <receiver android:name="net.orleaf.android.wifistate.core.WifiStateLaunchReceiver" />
 
         <service android:name="net.orleaf.android.wifistate.core.WifiStateControlService" />
+        <service android:name="net.orleaf.android.wifistate.core.WifiStateLaunchService" />
     </application>
 
 </manifest>

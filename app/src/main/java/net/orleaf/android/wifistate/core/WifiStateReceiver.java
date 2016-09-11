@@ -217,8 +217,8 @@ public class WifiStateReceiver extends BroadcastReceiver {
      * @param extraMessage 表示するメッセージ
      */
     private static void showNotificationIcon(Context ctx, int iconRes, NetworkStateInfo networkStateInfo, String extraMessage) {
-        Intent intent = new Intent(ctx, WifiStateLaunchReceiver.class);
-        PendingIntent contentIntent = PendingIntent.getBroadcast(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intent = new Intent(ctx, WifiStateLaunchService.class);
+        PendingIntent contentIntent = PendingIntent.getService(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         String title;
         if (networkStateInfo.getNetworkName() != null) {
