@@ -1,15 +1,21 @@
 package net.orleaf.android.wifistate.core;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.text.NumberFormat;
 import java.util.Enumeration;
+import java.util.List;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
 import android.net.NetworkInfo;
+import android.net.wifi.ScanResult;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -39,6 +45,10 @@ public class NetworkStateInfo {
     };
 
     private final Context mCtx;
+    private final WifiManager mWifiManager;
+    private final ConnectivityManager mConnectivityManager;
+    private final TelephonyManager mTelephonyManager;
+
     private String mNetworkName;
     private States mState = States.STATE_DISABLED;
     private String mStateDetail = null;
@@ -46,6 +56,7 @@ public class NetworkStateInfo {
     // Wi-Fi state
     private int mWifiState = 0;
     private WifiInfo mWifiInfo = null;
+    private List<ScanResult> mScanResults = null;
     private boolean mSupplicantConnected = false;
     private SupplicantState mSupplicantState = null;
     private NetworkInfo mWifiNetworkInfo = null;
@@ -61,6 +72,9 @@ public class NetworkStateInfo {
      */
     public NetworkStateInfo(Context ctx) {
         mCtx = ctx;
+        mWifiManager = (WifiManager) mCtx.getSystemService(Context.WIFI_SERVICE);
+        mConnectivityManager = (ConnectivityManager) mCtx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        mTelephonyManager = (TelephonyManager) mCtx.getSystemService(Context.TELEPHONY_SERVICE);
         mState = States.STATE_DISABLED;
         mNetworkName = null;
     }
@@ -71,26 +85,24 @@ public class NetworkStateInfo {
      * @return true:変更あり false:変更なし
      */
     public boolean update() {
-        WifiManager wm = (WifiManager) mCtx.getSystemService(Context.WIFI_SERVICE);
-        ConnectivityManager cm = (ConnectivityManager) mCtx.getSystemService(Context.CONNECTIVITY_SERVICE);
-        TelephonyManager tm = (TelephonyManager) mCtx.getSystemService(Context.TELEPHONY_SERVICE);
         Resources res = mCtx.getResources();
 
         States newState = mState;
         String newStateDetail = mStateDetail;
 
         // Wi-Fiの状態を取得
-        mWifiState = wm.getWifiState();
-        mWifiInfo = wm.getConnectionInfo();
+        mWifiState = mWifiManager.getWifiState();
+        mWifiInfo = mWifiManager.getConnectionInfo();
+        mScanResults = mWifiManager.getScanResults();
         mSupplicantState = mWifiInfo.getSupplicantState();
         if (mSupplicantState != SupplicantState.DISCONNECTED) {
             mSupplicantConnected = true;
         }
-        mWifiNetworkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        mWifiNetworkInfo = mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
         // モバイルネットワークの状態を取得
-        mDataConnectionState = tm.getDataState();
-        mDataNetworkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        mDataConnectionState = mTelephonyManager.getDataState();
+        mDataNetworkInfo = mConnectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
         if (mWifiState == WifiManager.WIFI_STATE_DISABLING ||
                 mWifiState == WifiManager.WIFI_STATE_DISABLED) {
@@ -204,7 +216,7 @@ public class NetworkStateInfo {
             // ネットワーク無効時は表示しない
             return true;
         }
-        if (WifiStatePreferences.getClearOnScanning(mCtx) && isScanning()) {
+        if (WifiStatePreferences.getClearOnScanning(mCtx) && isWifiScanning()) {
             // スキャン中は表示しない
             return true;
         }
@@ -256,24 +268,32 @@ public class NetworkStateInfo {
     }
 
     /**
-     * スキャン中かどうか
-     */
-    public boolean isScanning() {
-        return (mState.equals(States.STATE_WIFI_SCANNING));
-    }
-
-    /**
-     * ネットワークに接続中かどうか
+     * ネットワークに接続済かどうか (Wi-Fiまたはモバイルネットワーク)
      */
     public boolean isConnected() {
-        return (mState.equals(States.STATE_MOBILE_CONNECTED) || mState.equals(States.STATE_WIFI_CONNECTED));
+        return (mState == States.STATE_MOBILE_CONNECTED || mState == States.STATE_WIFI_CONNECTED);
     }
 
     /**
-     * Wi-Fiに接続中かどうか
+     * Wi-Fiをスキャン中かどうか
+     */
+    public boolean isWifiScanning() {
+        return (mState == States.STATE_WIFI_SCANNING);
+    }
+
+    /**
+     * Wi-Fi接続先決定済かどうか
+     */
+    public boolean isWifiAPDecided() {
+        return (mState.compareTo(States.STATE_WIFI_SCANNING) > 0 &&
+                mState.compareTo(States.STATE_WIFI_CONNECTED) <= 0);
+    }
+
+    /**
+     * Wi-Fiに接続済かどうか
      */
     public boolean isWifiConnected() {
-        return (mState.equals(States.STATE_WIFI_CONNECTED));
+        return (mState == States.STATE_WIFI_CONNECTED);
     }
 
     /**
@@ -295,11 +315,13 @@ public class NetworkStateInfo {
     }
 
     /**
-     * ネットワークの状態を取得
+     * ネットワークの状態情報を取得
+     *
+     * @return 状態情報 (IP取得済みであればIPアドレス情報)
      */
-    public String getDetail() {
+    public String getStateDetail() {
         String detail = mStateDetail;
-        if (mState == States.STATE_WIFI_CONNECTED || mState == States.STATE_MOBILE_CONNECTED) {
+        if (isConnected()) {
             String ip = getMyIpAddress();
             if (ip != null) {
                 detail = "IP:" + ip;
@@ -309,11 +331,96 @@ public class NetworkStateInfo {
     }
 
     /**
+     * ネットワークの追加情報を取得
+     *
+     * @return 追加情報 (null:未接続)
+     */
+    public String getExtraInfo() {
+        String detail = null;
+        ScanResult scanResult = getScanResult();
+        if (isWifiAPDecided()) {
+            // Signal Level
+            int rssi = mWifiInfo.getRssi();
+            detail = "Signal: " + WifiManager.calculateSignalLevel(rssi, 5) + "/4 (" + rssi + "dBm)";
+
+            // Channel
+            int freq = getWifiFrequency();
+            if (freq < 0 && scanResult != null) {
+                // WifiInfo から取得できない場合は ScanResult から取得
+                freq = scanResult.frequency;
+            }
+            if (freq > 0) {
+                int ch = convertFrequencyToChannel(freq);
+                if (ch > 0) {
+                    // ex) "36CH (5,180MHz)"
+                    detail += "\nChannel: " + ch + "CH (" + NumberFormat.getNumberInstance().format(freq) + "MHz)";
+                }
+            }
+
+            // Link Speed
+            int speed = mWifiInfo.getLinkSpeed();
+            if (speed > 0) {
+                detail += "\nSpeed: " + speed + WifiInfo.LINK_SPEED_UNITS;
+            }
+        }
+        return detail;
+    }
+
+    /**
+     * 接続中の ScanResult を取得
+     * @return ScanResult
+     */
+    private ScanResult getScanResult() {
+        if (mScanResults != null) {
+            for (ScanResult scanResult : mScanResults) {
+                if (scanResult.BSSID.equals(mWifiInfo.getBSSID())) {
+                    return scanResult;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * WifiInfo から周波数を取得 (requires API Level 21)
+     *
+     * @return 周波数 (-1:取得不可)
+     */
+    public int getWifiFrequency() {
+        try {
+            Method method = WifiInfo.class.getMethod("getFrequency");
+            return (Integer) method.invoke(mWifiInfo);
+        } catch (NoSuchMethodException ignored) {
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    /**
+     * ScanResult から値を取得
+     *
+     * @param scanResult ScanResult
+     * @param fieldName field name
+     * @return field value (-1:N/A)
+     */
+    private int getScanResultInt(ScanResult scanResult, String fieldName) {
+        try {
+            Field field = ScanResult.class.getField(fieldName);
+            return (Integer) field.get(scanResult);
+        } catch (NoSuchFieldException ignored) {
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    /**
      * IPアドレスを取得
      */
     public String getMyIpAddress() {
-        WifiManager wm = (WifiManager) mCtx.getSystemService(Context.WIFI_SERVICE);
-
         if (mState.equals(States.STATE_WIFI_CONNECTED)) {
             // Wi-Fi情報から取得
             int address = mWifiInfo.getIpAddress();
@@ -322,7 +429,7 @@ public class NetworkStateInfo {
             }
 
             // DHCP情報から取得
-            address = wm.getDhcpInfo().ipAddress;
+            address = mWifiManager.getDhcpInfo().ipAddress;
             if (address != 0) {
                 return int2IpAddress(address);
             }
@@ -376,4 +483,19 @@ public class NetworkStateInfo {
             ((ip >> 24) & 0xff);
     }
 
+    /**
+     * 周波数からチャネル番号に変換
+     *
+     * @param freq 周波数(MHz)
+     * @return チャネル番号 (-1:変換不可)
+     */
+    public static int convertFrequencyToChannel(int freq) {
+        if (freq >= 2412 && freq <= 2484) {
+            return (freq - 2412) / 5 + 1;
+        } else if (freq >= 5170 && freq <= 5825) {
+            return (freq - 5170) / 5 + 34;
+        } else {
+            return -1;
+        }
+    }
 }

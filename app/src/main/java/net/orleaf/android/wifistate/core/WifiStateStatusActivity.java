@@ -46,6 +46,7 @@ public class WifiStateStatusActivity extends Activity {
     private LinearLayout mNetworkLayout;
     private TextView mNetworkNameText;
     private TextView mNetworkStateText;
+    private TextView mNetworkExtraText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,7 @@ public class WifiStateStatusActivity extends Activity {
 
         mNetworkNameText = (TextView) findViewById(R.id.network_name);
         mNetworkStateText = (TextView) findViewById(R.id.network_status);
+        mNetworkExtraText = (TextView) findViewById(R.id.network_extra);
 
         // 設定ボタン
         mSettings = (Button) findViewById(R.id.settings);
@@ -255,7 +257,14 @@ public class WifiStateStatusActivity extends Activity {
         WifiManager wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
         mNetworkNameText.setText(mNetworkStateInfo.getNetworkName());
-        mNetworkStateText.setText(mNetworkStateInfo.getDetail());
+        mNetworkStateText.setText(mNetworkStateInfo.getStateDetail());
+        String extra = mNetworkStateInfo.getExtraInfo();
+        if (extra != null) {
+            mNetworkExtraText.setText(extra);
+            mNetworkExtraText.setVisibility(View.VISIBLE);
+        } else {
+            mNetworkExtraText.setVisibility(View.GONE);
+        }
         if (wm.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
             mWifiToggle.setChecked(false);
             mWifiToggle.setEnabled(true);

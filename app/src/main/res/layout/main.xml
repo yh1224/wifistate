@@ -47,6 +47,13 @@
         </LinearLayout>
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/network_extra"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:textSize="14sp" />
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

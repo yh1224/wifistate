@@ -226,7 +226,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
         } else {
             title = ctx.getResources().getString(R.string.app_name);
         }
-        String message = mNetworkStateInfo.getDetail();
+        String message = mNetworkStateInfo.getStateDetail();
         if (extraMessage != null) {
             message += extraMessage;
         }
