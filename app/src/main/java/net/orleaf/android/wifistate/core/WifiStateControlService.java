@@ -3,7 +3,6 @@ package net.orleaf.android.wifistate.core;
 import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -20,6 +19,8 @@ import net.orleaf.android.wifistate.R;
  * サービス
  */
 public class WifiStateControlService extends Service {
+    private static final String TAG = WifiStateControlService.class.getSimpleName();
+
     public static final String ACTION_WIFI_ENABLE = "net.orleaf.android.wifistate.ACTION_WIFI_ENABLE";
     public static final String ACTION_WIFI_DISABLE = "net.orleaf.android.wifistate.ACTION_WIFI_DISABLE";
     public static final String ACTION_WIFI_REENABLE = "net.orleaf.android.wifistate.ACTION_WIFI_REENABLE";
@@ -32,6 +33,7 @@ public class WifiStateControlService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG, "Service started.");
     }
 
     // This is the old onStart method that will be called on the pre-2.0
@@ -67,6 +69,7 @@ public class WifiStateControlService extends Service {
 
     public void onDestroy() {
         cancelReenable();
+        Log.d(TAG, "Service stopped.");
     }
 
     @Override
@@ -181,22 +184,12 @@ public class WifiStateControlService extends Service {
      * @param ctx Context
      * @param action ACTION_WIFI_ENABLE / ACTION_WIFI_DISABLE / ACTION_WIFI_REENABLE
      * @param sleep 有効化までの待ち時間(ACTION_WIFI_REENABLE指定時のみ)
-     * @return true:成功 false:失敗
      */
-    public static boolean startService(Context ctx, String action, int sleep) {
-        boolean result;
+    public static void startService(Context ctx, String action, int sleep) {
         Intent intent = new Intent(ctx, WifiStateControlService.class);
         intent.setAction(action);
         intent.putExtra(EXTRA_SLEEP, sleep);
-        ComponentName name = ctx.startService(intent);
-        if (name == null) {
-            Log.e(WifiState.TAG, "WifiStateControlService could not start!");
-            result = false;
-        } else {
-            if (BuildConfig.DEBUG) Log.d(WifiState.TAG, "WifiStateControlService started: " + name);
-            result = true;
-        }
-        return result;
+        ctx.startService(intent);
     }
 
     /**
@@ -204,10 +197,8 @@ public class WifiStateControlService extends Service {
      *
      * @param ctx Context
      * @param action ACTION_WIFI_ENABLE / ACTION_WIFI_DISABLE / ACTION_WIFI_REENABLE
-     * @return true:成功 false:失敗
      */
-    public static boolean startService(Context ctx, String action) {
-        return startService(ctx, action, 0);
+    public static void startService(Context ctx, String action) {
+        startService(ctx, action, 0);
     }
-
 }
