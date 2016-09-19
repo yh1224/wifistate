@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -232,6 +233,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
         }
         Notification notification = new NotificationCompat.Builder(ctx)
                 .setSmallIcon(iconRes)
+                .setLargeIcon(BitmapFactory.decodeResource(ctx.getResources(), R.drawable.icon))
                 .setContentTitle(title)
                 .setContentText(message)
                 .setContentIntent(contentIntent)
