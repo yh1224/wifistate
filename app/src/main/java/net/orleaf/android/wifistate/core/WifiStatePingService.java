@@ -10,7 +10,6 @@ import java.net.UnknownHostException;
 import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -30,8 +29,6 @@ public class WifiStatePingService extends Service {
     public static final String EXTRA_TARGET = "target";
 
     private static final boolean TESTMODE = false;
-
-    private static ComponentName mService;
 
     private BroadcastReceiver mScreenReceiver;
 
@@ -65,6 +62,8 @@ public class WifiStatePingService extends Service {
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(mScreenReceiver, filter);
+
+        Log.d(TAG, "Service started.");
     }
 
     // This is the old onStart method that will be called on the pre-2.0
@@ -176,6 +175,8 @@ public class WifiStatePingService extends Service {
         if (mScreenReceiver != null) {
             unregisterReceiver(mScreenReceiver);
         }
+
+        Log.d(TAG, "Service stopped.");
     }
 
     @Override
@@ -303,37 +304,18 @@ public class WifiStatePingService extends Service {
      * @param ctx Context
      * @param target 監視先ホスト
      */
-    public static boolean startService(Context ctx, String target) {
-        boolean result;
-
+    public static void startService(Context ctx, String target) {
         Intent intent = new Intent(ctx, WifiStatePingService.class);
         intent.putExtra(EXTRA_TARGET, target);
-        mService = ctx.startService(intent);
-        if (mService == null) {
-            Log.e(WifiState.TAG, "WifiStatePingService could not start!");
-            result = false;
-        } else {
-            Log.d(WifiState.TAG, "Service started: " + mService);
-            result = true;
-        }
-        return result;
+        ctx.startService(intent);
     }
 
     /**
      * ネットワーク疎通監視サービス停止
+     *
+     * @param ctx Context
      */
     public static void stopService(Context ctx) {
-        if (mService != null) {
-            Intent i = new Intent();
-            i.setComponent(mService);
-            boolean res = ctx.stopService(i);
-            if (!res) {
-                Log.e(WifiState.TAG, "WifiStatePingService could not stop!");
-            } else {
-                Log.d(WifiState.TAG, "Service stopped: " + mService);
-                mService = null;
-            }
-        }
+        ctx.stopService(new Intent(ctx, WifiStatePingService.class));
     }
-
 }

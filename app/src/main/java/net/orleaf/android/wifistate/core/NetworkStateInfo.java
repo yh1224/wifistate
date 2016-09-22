@@ -32,7 +32,6 @@ import net.orleaf.android.wifistate.core.preferences.WifiStatePreferences;
 public class NetworkStateInfo {
     enum States {
         STATE_DISABLED,
-        STATE_WIFI_1,           // no use
         STATE_WIFI_ENABLING,
         STATE_WIFI_ENABLED,
         STATE_WIFI_SCANNING,
@@ -236,26 +235,24 @@ public class NetworkStateInfo {
     public int getIcon() {
         if (mState == States.STATE_DISABLED) {
             return R.drawable.state_0;
-        } else if (mState == States.STATE_WIFI_1) {
-            return R.drawable.state_w1;
         } else if (mState == States.STATE_WIFI_ENABLING) {
-            return R.drawable.state_w2;
+            return R.drawable.state_w1;
         } else if (mState == States.STATE_WIFI_ENABLED) {
-            return R.drawable.state_w3;
+            return R.drawable.state_w2;
         } else if (mState == States.STATE_WIFI_SCANNING) {
-            return R.drawable.state_w4;
+            return R.drawable.state_w3;
         } else if (mState == States.STATE_WIFI_CONNECTING) {
-            return R.drawable.state_w5;
+            return R.drawable.state_w4;
         } else if (mState == States.STATE_WIFI_COMPLETED) {
-            return R.drawable.state_w6;
+            return R.drawable.state_w5;
         } else if (mState == States.STATE_WIFI_OBTAINING_IPADDR) {
-            return R.drawable.state_w7;
+            return R.drawable.state_w5;
         } else if (mState == States.STATE_WIFI_CONNECTED) {
-            return R.drawable.state_w8;
+            return R.drawable.state_w6;
         } else if (mState == States.STATE_MOBILE_CONNECTING) {
-            return R.drawable.state_m4;
+            return R.drawable.state_m3;
         } else if (mState == States.STATE_MOBILE_CONNECTED) {
-            return R.drawable.state_m8;
+            return R.drawable.state_m6;
         }
         return 0;
     }

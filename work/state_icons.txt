@@ -1,0 +1,15 @@
+state_0         DISABLED                Wi-Fi無効
+state_w1        WIFI_ENABLING           Wi-Fi有効化中
+state_w2        WIFI_ENABLED            Wi-Fi有効
+state_w3        WIFI_SCANNING           スキャン中
+state_w4        WIFI_CONNECTING         接続処理中
+state_w5        WIFI_OBTAINING_IPADDR   IPアドレス取得中
+state_w6        WIFI_CONNECTED          接続中
+state_m4        MOBILE_CONNECTING       モバイルネットワーク接続処理中
+state_m8        MOBILE_CONNECTED        モバイルネットワーク接続中
+
+green   339933  Wi-Fi
+blue    0066cc  Mobile
+yellow  ff6600  Warning
+gray    666666  Disabled
+

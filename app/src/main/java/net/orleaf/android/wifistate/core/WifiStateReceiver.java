@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -177,18 +178,19 @@ public class WifiStateReceiver extends BroadcastReceiver {
     /**
      * ステータスバーに通知アイコンをすべて表示 (テスト用)
      */
+    @SuppressWarnings("unused")
     public static void testNotificationIcon(Context ctx) {
         int[] icons = {
+            R.drawable.state_0,
             R.drawable.state_w1,
             R.drawable.state_w2,
             R.drawable.state_w3,
             R.drawable.state_w4,
             R.drawable.state_w5,
             R.drawable.state_w6,
-            R.drawable.state_w7,
-            R.drawable.state_w8,
-            R.drawable.state_m4,
-            R.drawable.state_m8,
+            R.drawable.state_m3,
+            R.drawable.state_m6,
+            R.drawable.state_warn,
         };
         for (int i = 0; i < icons.length; i++) {
             Intent intent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
@@ -232,6 +234,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
         }
         Notification notification = new NotificationCompat.Builder(ctx)
                 .setSmallIcon(iconRes)
+                .setLargeIcon(BitmapFactory.decodeResource(ctx.getResources(), R.drawable.icon))
                 .setContentTitle(title)
                 .setContentText(message)
                 .setContentIntent(contentIntent)
