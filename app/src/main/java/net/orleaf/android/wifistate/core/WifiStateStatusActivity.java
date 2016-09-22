@@ -106,6 +106,7 @@ public class WifiStateStatusActivity extends Activity {
             }
         });
         mWifiReenable.setEnabled(false);
+        //WifiStateReceiver.testNotificationIcon(this);
     }
 
     @Override

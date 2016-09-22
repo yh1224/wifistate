@@ -178,6 +178,7 @@ public class WifiStateReceiver extends BroadcastReceiver {
     /**
      * ステータスバーに通知アイコンをすべて表示 (テスト用)
      */
+    @SuppressWarnings("unused")
     public static void testNotificationIcon(Context ctx) {
         int[] icons = {
             R.drawable.state_0,
