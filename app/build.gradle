@@ -12,14 +12,14 @@ android {
     productFlavors {
         lite {
             applicationId "net.orleaf.android.wifistate"
-            versionCode 1
-            versionName ""
+            versionCode 19
+            versionName "1.6"
             buildConfigField "boolean", "LITE_VERSION", "true"
         }
         Plus {
             applicationId "net.orleaf.android.wifistate.plus"
-            versionCode 1
-            versionName ""
+            versionCode 13
+            versionName "1.8"
             buildConfigField "boolean", "LITE_VERSION", "false"
         }
     }
