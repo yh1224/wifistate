@@ -11,6 +11,7 @@
     <string name="support">Support</string>
     <string name="support_url" translatable="false">http://orleaf.net</string>
     <string name="pref_enable_title">Enable</string>
+    <string name="pref_icon_style_title">Icon Style</string>
     <string name="pref_clearable_title">Clearable</string>
     <string name="pref_clearable_summary">Enable to clear notication icon manually.</string>
     <string name="pref_clear_on_connected_title">Clear on connected</string>
@@ -64,6 +65,9 @@
     <string name="tips_1">Long tap SSID/APN to select another Wi-Fi access point to connect.</string>
     <string name="tips_2">Long tap Reconnect button to close and reconnect.</string>
     <string name="connect_to">Connect to</string>
+    <string name="icon_style_solid">Solid circle with Wi-Fi icon</string>
+    <string name="icon_style_broken">Broken circle with Wi-Fi icon</string>
+    <string name="icon_style_small">Broken circle (small)</string>
     <string name="open_dialog">Open Dialog</string>
     <string name="toggle_wifi">Toggle Wi-Fi</string>
     <string name="reenable_wifi">Reconnect Wi-Fi</string>

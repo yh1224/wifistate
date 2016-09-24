@@ -89,7 +89,8 @@ public class WifiStateReceiver extends BroadcastReceiver {
                         if (mReachable) {
                             iconRes = mNetworkStateInfo.getIcon();
                         } else {
-                            iconRes = R.drawable.state_warn;
+                            String name = String.format("state_%s_warn", WifiStatePreferences.getIconStyle(ctx));
+                            iconRes = ctx.getResources().getIdentifier(name, "drawable", ctx.getPackageName());
                         }
                         String extra = null;
                         if (BuildConfig.DEBUG) {
@@ -180,34 +181,27 @@ public class WifiStateReceiver extends BroadcastReceiver {
      */
     @SuppressWarnings("unused")
     public static void testNotificationIcon(Context ctx) {
-        int[] icons = {
-            R.drawable.state_0,
-            R.drawable.state_w1,
-            R.drawable.state_w2,
-            R.drawable.state_w3,
-            R.drawable.state_w4,
-            R.drawable.state_w5,
-            R.drawable.state_w6,
-            R.drawable.state_m3,
-            R.drawable.state_m6,
-            R.drawable.state_warn,
-        };
-        for (int i = 0; i < icons.length; i++) {
+        String style = WifiStatePreferences.getIconStyle(ctx);
+        String[] states = new String[] { "0", "w1", "w2", "w3", "w4", "w5", "w6", "m3", "w6", "warn" };
+        for (String state : states) {
+            String name = String.format("state_%s_%s", style, state);
+            int iconRes = ctx.getResources().getIdentifier(name, "drawable", ctx.getPackageName());
+
             Intent intent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, intent, 0);
 
             Notification notification = new NotificationCompat.Builder(ctx)
-                    .setSmallIcon(icons[i])
+                    .setSmallIcon(iconRes)
                     .setContentTitle(ctx.getResources().getString(R.string.app_name))
-                    .setContentText("State" + i)
+                    .setContentText(name)
                     .setContentIntent(contentIntent)
                     .setWhen(System.currentTimeMillis())
                     .build();
 
             NotificationManager notificationManager = (NotificationManager)
                     ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(i, notification);
+            notificationManager.notify(iconRes, notification);
         }
     }
 

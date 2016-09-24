@@ -34,7 +34,9 @@ public class AboutActivity extends Activity
         }
         try {
             PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
-            title += " ver." + pi.versionName;
+            if (pi.versionName != null) {
+                title += " " + pi.versionName;
+            }
         } catch (NameNotFoundException e) {
             throw new AssertionError(e);
         }

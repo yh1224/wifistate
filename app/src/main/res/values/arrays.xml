@@ -13,6 +13,16 @@
         <item>reenable_wifi</item>
         <item>wifi_settings</item>
     </string-array>
+    <string-array name="entries_icon_style">
+        <item>@string/icon_style_solid</item>
+        <item>@string/icon_style_broken</item>
+        <item>@string/icon_style_small</item>
+    </string-array>
+    <string-array name="entryvalues_icon_style" translatable="false">
+        <item>solid</item>
+        <item>broken</item>
+        <item>small</item>
+    </string-array>
     <string-array name="tips">
         <item>@string/tips_1</item>
         <item>@string/tips_2</item>

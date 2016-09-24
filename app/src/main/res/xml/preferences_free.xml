@@ -6,6 +6,13 @@
         android:title="@string/pref_enable_title" />
 
     <PreferenceCategory android:title="@string/preferences_notification" >
+        <ListPreference
+            android:defaultValue="solid"
+            android:dependency="enabled"
+            android:entries="@array/entries_icon_style"
+            android:entryValues="@array/entryvalues_icon_style"
+            android:key="icon_style"
+            android:title="@string/pref_icon_style_title" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:dependency="enabled"
