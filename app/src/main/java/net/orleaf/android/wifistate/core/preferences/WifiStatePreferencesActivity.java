@@ -22,6 +22,7 @@ import net.orleaf.android.wifistate.core.WifiStateReceiver;
 public class WifiStatePreferencesActivity extends PreferenceActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener
 {
+    private ListPreference mPrefIconStyle;
     private ListPreference mPrefActionOnTap;
     private EditTextPreference mPrefPingTarget;
     private NumberSeekbarPreference mPrefPingTimeout;
@@ -43,6 +44,7 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
             addPreferencesFromResource(R.xml.preferences);
         }
 
+        mPrefIconStyle = (ListPreference) findPreference(WifiStatePreferences.PREF_ICON_STYLE_KEY);
         mPrefActionOnTap = (ListPreference) findPreference(WifiStatePreferences.PREF_ACTION_ON_TAP_KEY);
         mPrefPingTarget = (EditTextPreference) findPreference(WifiStatePreferences.PREF_PING_TARGET_KEY);
         mPrefPingTimeout = (NumberSeekbarPreference) findPreference(WifiStatePreferences.PREF_PING_TIMEOUT_KEY);
@@ -121,6 +123,10 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
      * 表示の更新
      */
     private void updateSummary() {
+        mPrefIconStyle.setSummary(
+                getEntryString(mPrefIconStyle.getValue(),
+                        getResources().getStringArray(R.array.entries_icon_style),
+                        getResources().getStringArray(R.array.entryvalues_icon_style)));
         mPrefActionOnTap.setSummary(
                 getEntryString(mPrefActionOnTap.getValue(),
                     getResources().getStringArray(R.array.entries_action_on_tap),
@@ -161,6 +167,8 @@ public class WifiStatePreferencesActivity extends PreferenceActivity
         } else {
             mPrefBrowseRouter.setEnabled(false);
         }
-    }
 
+        // 通知更新
+        WifiStateReceiver.startNotification(this);
+    }
 }

@@ -8,6 +8,7 @@
     <string name="preferences_ping">監視設定</string>
     <string name="preferences_other">その他</string>
     <string name="pref_enable_title">有効化</string>
+    <string name="pref_icon_style_title">スタイル</string>
     <string name="pref_clearable_title">消去可能</string>
     <string name="pref_clearable_summary">通知アイコンを消去可能にします。</string>
     <string name="pref_clear_on_connected_title">接続完了時に消去</string>
@@ -60,6 +61,9 @@
     <string name="tips_1">SSID/APNを長押しすると、他のアクセスポイントを選択して接続することができます。</string>
     <string name="tips_2">再接続ボタンを長押しすると、画面を閉じてから再接続します。</string>
     <string name="connect_to">接続先</string>
+    <string name="icon_style_solid">円形+Wi-Fiアイコン</string>
+    <string name="icon_style_broken">分割円+Wi-Fiアイコン</string>
+    <string name="icon_style_small">分割円(小)</string>
     <string name="open_dialog">ダイアログを開く</string>
     <string name="toggle_wifi">Wi-Fi ON/OFF</string>
     <string name="reenable_wifi">Wi-Fi 再接続</string>

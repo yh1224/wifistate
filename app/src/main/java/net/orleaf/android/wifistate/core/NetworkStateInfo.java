@@ -31,17 +31,24 @@ import net.orleaf.android.wifistate.core.preferences.WifiStatePreferences;
  */
 public class NetworkStateInfo {
     enum States {
-        STATE_DISABLED,
-        STATE_WIFI_ENABLING,
-        STATE_WIFI_ENABLED,
-        STATE_WIFI_SCANNING,
-        STATE_WIFI_CONNECTING,
-        STATE_WIFI_COMPLETED,
-        STATE_WIFI_OBTAINING_IPADDR,
-        STATE_WIFI_CONNECTED,
-        STATE_MOBILE_CONNECTING,
-        STATE_MOBILE_CONNECTED
-    };
+        STATE_DISABLED("0"),
+        STATE_WIFI_ENABLING("w1"),
+        STATE_WIFI_ENABLED("w2"),
+        STATE_WIFI_SCANNING("w3"),
+        STATE_WIFI_CONNECTING("w4"),
+        STATE_WIFI_COMPLETED("w5"),
+        STATE_WIFI_OBTAINING_IPADDR("w5"),
+        STATE_WIFI_CONNECTED("w6"),
+        STATE_MOBILE_CONNECTING("m3"),
+        STATE_MOBILE_CONNECTED("m6");
+        private String iconName;
+        States(String iconName) {
+            this.iconName = iconName;
+        }
+        public String getIconName() {
+            return iconName;
+        }
+    }
 
     private final Context mCtx;
     private final WifiManager mWifiManager;
@@ -233,28 +240,8 @@ public class NetworkStateInfo {
      * @return アイコンのリソースID
      */
     public int getIcon() {
-        if (mState == States.STATE_DISABLED) {
-            return R.drawable.state_0;
-        } else if (mState == States.STATE_WIFI_ENABLING) {
-            return R.drawable.state_w1;
-        } else if (mState == States.STATE_WIFI_ENABLED) {
-            return R.drawable.state_w2;
-        } else if (mState == States.STATE_WIFI_SCANNING) {
-            return R.drawable.state_w3;
-        } else if (mState == States.STATE_WIFI_CONNECTING) {
-            return R.drawable.state_w4;
-        } else if (mState == States.STATE_WIFI_COMPLETED) {
-            return R.drawable.state_w5;
-        } else if (mState == States.STATE_WIFI_OBTAINING_IPADDR) {
-            return R.drawable.state_w5;
-        } else if (mState == States.STATE_WIFI_CONNECTED) {
-            return R.drawable.state_w6;
-        } else if (mState == States.STATE_MOBILE_CONNECTING) {
-            return R.drawable.state_m3;
-        } else if (mState == States.STATE_MOBILE_CONNECTED) {
-            return R.drawable.state_m6;
-        }
-        return 0;
+        String name = String.format("state_%s_%s", WifiStatePreferences.getIconStyle(mCtx), mState.getIconName());
+        return mCtx.getResources().getIdentifier(name, "drawable", mCtx.getPackageName());
     }
 
     /**

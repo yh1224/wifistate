@@ -11,6 +11,9 @@ public class WifiStatePreferences
     public static final String PREF_ENABLED_KEY = "enabled";
     public static final boolean PREF_ENABLED_DEFAULT = true;
 
+    public static final String PREF_ICON_STYLE_KEY = "icon_style";
+    public static final String PREF_ICON_STYLE_DEFAULT = "solid";
+
     public static final String PREF_CLEARABLE_KEY = "clearable";
     public static final boolean PREF_CLEARABLE_DEFAULT = false;
 
@@ -63,6 +66,12 @@ public class WifiStatePreferences
         return PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(
                 WifiStatePreferences.PREF_ENABLED_KEY,
                 WifiStatePreferences.PREF_ENABLED_DEFAULT);
+    }
+
+    public static String getIconStyle(Context ctx) {
+        return PreferenceManager.getDefaultSharedPreferences(ctx).getString(
+                WifiStatePreferences.PREF_ICON_STYLE_KEY,
+                WifiStatePreferences.PREF_ICON_STYLE_DEFAULT);
     }
 
     public static boolean getClearable(Context ctx) {
