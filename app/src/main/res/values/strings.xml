@@ -52,7 +52,7 @@
     <string name="state_obtaining_ipaddr">Obtaining IP address</string>
     <string name="state_connected">Connected</string>
     <string name="state_disconnected">Disconnected</string>
-    <string name="state_unavailable">Network unavaiable</string>
+    <string name="state_unavailable">Network unavailable</string>
     <string name="state_mobile_connecting">Connecting to mobile network</string>
     <string name="state_mobile_connected">Connected to mobile network</string>
     <string name="wifi" translatable="false">Wi-Fi</string>
